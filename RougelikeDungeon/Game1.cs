@@ -9,6 +9,8 @@ namespace RougelikeDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
+        Texture2D PlayerSprite;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -28,6 +30,7 @@ namespace RougelikeDungeon
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            PlayerSprite = this.Content.Load<Texture2D>("player/player");
         }
 
         protected override void Update(GameTime gameTime)
@@ -42,11 +45,16 @@ namespace RougelikeDungeon
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+
+            _spriteBatch.Begin();
+            _spriteBatch.Draw(PlayerSprite, new Vector2(10, 10), Color.White);
+            _spriteBatch.End();
+
         }
     }
 }
