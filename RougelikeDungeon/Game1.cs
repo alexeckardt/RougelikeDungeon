@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Packets;
+using System.Collections.Generic;
 
 namespace RougelikeDungeon
 {
@@ -12,6 +13,8 @@ namespace RougelikeDungeon
         private SpriteBatch _spriteBatch;
 
         Player player;
+
+        List<GameObject> objects = new List<GameObject>();
 
         public Game1()
         {
@@ -30,6 +33,7 @@ namespace RougelikeDungeon
         {
             // TODO: Add your initialization logic here
             player = new Player();
+            objects.Add(player);
 
             base.Initialize();
         }
@@ -38,8 +42,7 @@ namespace RougelikeDungeon
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
-            player.LoadContent(this.Content);
+            LoadObjects();
         }
 
         protected override void Update(GameTime gameTime)
@@ -47,8 +50,8 @@ namespace RougelikeDungeon
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            //Update Player
-            player.Update(gameTime);
+            //Update Objects
+            UpdateObjects(gameTime);
 
             //Update Game
             base.Update(gameTime);
@@ -56,19 +59,40 @@ namespace RougelikeDungeon
 
         protected override void Draw(GameTime gameTime)
         {
+            //Clear
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
+            //Draw to Sprite Batch
+            this._spriteBatch.Begin();
+                DrawObjects();
+            this._spriteBatch.End();
 
+            //Draw
             base.Draw(gameTime);
+        }
 
-            _spriteBatch.Begin();
+        public void LoadObjects()
+        {
+            foreach (GameObject obj in objects) {
+                obj.Initalize();
+                obj.LoadContent(this.Content);
+            }
+        }
 
-            SpriteInfo playerSpriteInfo = player.GetSpriteInfo();
-            _spriteBatch.Draw(playerSpriteInfo.Sprite, playerSpriteInfo.Position, playerSpriteInfo.Color);
+        public void UpdateObjects(GameTime time)
+        {
+            foreach (GameObject obj in objects)
+            {
+                obj.Update(objects, time);
+            }
+        }
 
-            _spriteBatch.End();
-
+        public void DrawObjects()
+        {
+            foreach (GameObject obj in objects)
+            {
+                obj.Draw(this._spriteBatch);
+            }
         }
     }
 }
