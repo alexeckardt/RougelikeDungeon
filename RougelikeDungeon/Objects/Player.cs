@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Packets;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,14 @@ namespace RougelikeDungeon.Objects
 
         public void Update(GameTime gameTime)
         {
+            //Get Time
+            var time = gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Update
+            var left = Input.Instance.IsKeyDown(Keys.Left);
+            var right = Input.Instance.IsKeyDown(Keys.Right);
+            var up = Input.Instance.IsKeyDown(Keys.Up);
+            var down = Input.Instance.IsKeyDown(Keys.Down);
 
         }
 
