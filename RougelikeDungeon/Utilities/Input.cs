@@ -8,15 +8,31 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace RougelikeDungeon.Utilities
 {
-    public static class Input //Static classes can easily be accessed anywhere in our codebase. They always stay in memory so you should only do it for universal things like input.
+    public class Input //Static classes can easily be accessed anywhere in our codebase. They always stay in memory so you should only do it for universal things like input.
     {
-        private static KeyboardState keyboardState = Keyboard.GetState();
-        private static KeyboardState lastKeyboardState;
+        private KeyboardState keyboardState = Keyboard.GetState();
+        private KeyboardState lastKeyboardState;
 
-        private static MouseState mouseState;
-        private static MouseState lastMouseState;
+        private MouseState mouseState;
+        private MouseState lastMouseState;
 
-        public static void Update()
+        private Input() { }
+
+        //Singleton Instantiation
+        private static Input instance;
+        public static Input Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new Input();
+                }
+                return instance;
+            }
+        }
+
+        public void Update()
         {
             lastKeyboardState = keyboardState;
             keyboardState = Keyboard.GetState();
@@ -28,23 +44,29 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Checks if key is currently pressed.
         /// </summary>
-        public static bool IsKeyDown(Keys input)
+        public bool IsKeyDown(Keys input)
         {
             return keyboardState.IsKeyDown(input);
         }
 
+        //Integer
+        public int IsKeyDownInt(Keys input) => IsKeyDown(input) ? 1 : 0;
+
         /// <summary>
         /// Checks if key is currently up.
         /// </summary>
-        public static bool IsKeyUp(Keys input)
+        public bool IsKeyUp(Keys input)
         {
             return keyboardState.IsKeyUp(input);
         }
 
+        //Integer
+        public int IsKeyUpInt(Keys input) => IsKeyUp(input) ? 1 : 0;
+
         /// <summary>
         /// Checks if key was just pressed.
         /// </summary>
-        public static bool KeyPressed(Keys input)
+        public bool KeyPressed(Keys input)
         {
             if (keyboardState.IsKeyDown(input) == true && lastKeyboardState.IsKeyDown(input) == false)
                 return true;
@@ -52,10 +74,13 @@ namespace RougelikeDungeon.Utilities
                 return false;
         }
 
+        //Integer
+        public int KeyPressedInt(Keys input) => KeyPressed(input) ? 1 : 0;
+
         /// <summary>
         /// Returns whether or not the left mouse button is being pressed.
         /// </summary>
-        public static bool MouseLeftDown()
+        public bool MouseLeftDown()
         {
             if (mouseState.LeftButton == ButtonState.Pressed)
                 return true;
@@ -66,7 +91,7 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Returns whether or not the right mouse button is being pressed.
         /// </summary>
-        public static bool MouseRightDown()
+        public bool MouseRightDown()
         {
             if (mouseState.RightButton == ButtonState.Pressed)
                 return true;
@@ -77,7 +102,7 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Checks if the left mouse button was clicked.
         /// </summary>
-        public static bool MouseLeftClicked()
+        public bool MouseLeftClicked()
         {
             if (mouseState.LeftButton == ButtonState.Pressed && lastMouseState.LeftButton == ButtonState.Released)
                 return true;
@@ -88,7 +113,7 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Checks if the right mouse button was clicked.
         /// </summary>
-        public static bool MouseRightClicked()
+        public bool MouseRightClicked()
         {
             if (mouseState.RightButton == ButtonState.Pressed && lastMouseState.RightButton == ButtonState.Released)
                 return true;
@@ -99,7 +124,7 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Gets mouse coordinates adjusted for virtual resolution and camera position.
         /// </summary>
-        public static Vector2 MousePositionCamera()
+        public Vector2 MousePositionCamera()
         {
             Vector2 mousePosition = Vector2.Zero;
             mousePosition.X = mouseState.X;
@@ -111,7 +136,7 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Gets the last mouse coordinates adjusted for virtual resolution and camera position.
         /// </summary>
-        public static Vector2 LastMousePositionCamera()
+        public Vector2 LastMousePositionCamera()
         {
             Vector2 mousePosition = Vector2.Zero;
             mousePosition.X = lastMouseState.X;
@@ -123,7 +148,7 @@ namespace RougelikeDungeon.Utilities
         /// <summary>
         /// Takes screen coordinates (2D position like where the mouse is on screen) then converts it to world position (where we clicked at in the world). 
         /// </summary>
-        private static Vector2 ScreenToWorld(Vector2 input)
+        private Vector2 ScreenToWorld(Vector2 input)
         {
             input.X -= Resolution.VirtualViewportX;
             input.Y -= Resolution.VirtualViewportY;

@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Packets;
+using RougelikeDungeon.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,10 +42,10 @@ namespace RougelikeDungeon.Objects
             var time = gameTime.ElapsedGameTime.TotalSeconds;
 
             //Update
-            var left = (float) Input.Instance.IsKeyDown(Keys.Left);
-            var right = (float) Input.Instance.IsKeyDown(Keys.Right);
-            var up = (float) Input.Instance.IsKeyDown(Keys.Up);
-            var down = (float) Input.Instance.IsKeyDown(Keys.Down);
+            var left = (float) Input.Instance.IsKeyDownInt(Keys.Left);
+            var right = (float) Input.Instance.IsKeyDownInt(Keys.Right);
+            var up = (float) Input.Instance.IsKeyDownInt(Keys.Up);
+            var down = (float) Input.Instance.IsKeyDownInt(Keys.Down);
 
             //Get an Input Direction
             var inputDirection = new Vector2(right - left, down - up);
