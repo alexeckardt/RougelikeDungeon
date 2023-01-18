@@ -11,7 +11,6 @@ namespace RougelikeDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        Texture2D PlayerSprite;
         Player player;
 
         public Game1()
@@ -19,6 +18,12 @@ namespace RougelikeDungeon
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+
+            //Set Resolution
+            _graphics.PreferredBackBufferWidth = 320;
+            _graphics.PreferredBackBufferHeight = 180;
+            _graphics.IsFullScreen = false;
+            _graphics.ApplyChanges();
         }
 
         protected override void Initialize()
