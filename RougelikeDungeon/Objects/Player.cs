@@ -52,8 +52,10 @@ namespace RougelikeDungeon.Objects
             Position += inputDirection*(MoveSpeed);
         }
 
-        //Get the Sprite info
-        public SpriteInfo GetSpriteInfo() => new SpriteInfo(PlayerSprite, new Vector2((float) Math.Floor(Position.X), (float) Math.Floor(Position.Y)), Tint);
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            base.Draw(spriteBatch);
+        }
 
         //
         private Vector2 GetKeyboardInputDirection()

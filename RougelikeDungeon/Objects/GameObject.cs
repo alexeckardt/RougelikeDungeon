@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Packets;
+using System;
 using System.Collections.Generic;
 
 namespace RougelikeDungeon.Objects
@@ -20,7 +21,7 @@ namespace RougelikeDungeon.Objects
         public float Rotation = 0f;
 
         //Game Object
-        public int Depth = 0;
+        public float Depth = 0.5f;
         public bool Active = true;
 
         public GameObject() { }
@@ -31,13 +32,23 @@ namespace RougelikeDungeon.Objects
 
         public virtual void Update(List<GameObject> objects, GameTime gameTime) { }
 
-        public virtual void Draw(SpriteBatch spriteBatch) { }
+        public virtual void Draw(SpriteBatch spriteBatch) {
 
+            //Default Behaviour
+            if (Sprite != null && Active)
+            {
+                spriteBatch.Draw(Sprite, Position, null, Tint, Rotation, SpriteOffset, Scale, SpriteEffects.None, Depth);
+            }
+        }
 
         private void SpriteCenteredOrigin()
         {
             if (Sprite == null) return;
             SpriteOffset = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
         }
+
+        //
+        // Draw Methods
+        //
     }
 }
