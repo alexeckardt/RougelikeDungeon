@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RougelikeDungeon.Objects;
+using RougelikeDungeon.Packets;
 
 namespace RougelikeDungeon
 {
@@ -10,6 +12,7 @@ namespace RougelikeDungeon
         private SpriteBatch _spriteBatch;
 
         Texture2D PlayerSprite;
+        Player player;
 
         public Game1()
         {
@@ -21,6 +24,7 @@ namespace RougelikeDungeon
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+            player = new Player();
 
             base.Initialize();
         }
@@ -30,7 +34,7 @@ namespace RougelikeDungeon
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            PlayerSprite = this.Content.Load<Texture2D>("player/player");
+            player.LoadContent(this.Content);
         }
 
         protected override void Update(GameTime gameTime)
@@ -38,8 +42,10 @@ namespace RougelikeDungeon
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            //Update Player
+            player.Update(gameTime);
 
+            //Update Game
             base.Update(gameTime);
         }
 
@@ -52,7 +58,10 @@ namespace RougelikeDungeon
             base.Draw(gameTime);
 
             _spriteBatch.Begin();
-            _spriteBatch.Draw(PlayerSprite, new Vector2(10, 10), Color.White);
+
+            SpriteInfo playerSpriteInfo = player.GetSpriteInfo();
+            _spriteBatch.Draw(playerSpriteInfo.Sprite, playerSpriteInfo.Position, playerSpriteInfo.Color);
+
             _spriteBatch.End();
 
         }
