@@ -46,13 +46,7 @@ namespace RougelikeDungeon.Objects
         public override void Update(List<GameObject> objects, GameTime gameTime)
         {
             var time = gameTime.ElapsedGameTime.TotalSeconds;
-            var inputDirection = GetKeyboardInputDirection();
-
-            //Normalize Input
-            if (inputDirection.X != 0 && inputDirection.Y != 0)
-            {
-                inputDirection.Normalize();
-            }
+            var inputDirection = GetKeyboardInputDirection().Normalized();
 
             //Move
             Position += inputDirection*(MoveSpeed);
