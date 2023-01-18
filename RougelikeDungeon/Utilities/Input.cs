@@ -28,6 +28,9 @@ namespace RougelikeDungeon.Utilities
                 {
                     instance = new Input();
                 }
+
+                //Update On Singleton Get
+                instance.Update();
                 return instance;
             }
         }

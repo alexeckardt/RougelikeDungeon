@@ -14,8 +14,8 @@ namespace RougelikeDungeon.Objects
         protected Vector2 SpriteOffset;
 
         //Visual
-        public Vector2 Position;
-        public Color Tint;
+        public Vector2 Position = Vector2.Zero;
+        public Color Tint = Color.White;
         public float Scale = 1.0f;
         public float Rotation = 0f;
 
