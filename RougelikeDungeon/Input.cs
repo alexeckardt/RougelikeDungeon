@@ -29,7 +29,7 @@ namespace RougelikeDungeon
                 }
 
                 //Update on Call, so Subsequent on same call do not need to perform the get
-                keyboardState = Keyboard.GetState();
+                instance.keyboardState = Keyboard.GetState();
 
                 //Return
                 return instance; 
