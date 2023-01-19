@@ -1,4 +1,5 @@
-﻿using RougelikeDungeon.Objects;
+﻿using Microsoft.Xna.Framework;
+using RougelikeDungeon.Objects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace RougelikeDungeon
     internal class GameObjects
     {
         private List<GameObject> Objects;
+        private List<Solid> SolidObjectsCopy;
 
         public GameObjects()
         {
@@ -20,11 +22,31 @@ namespace RougelikeDungeon
         public void Add(GameObject newObject)
         {
             Objects.Add(newObject);
+
+            //Store in a Seperate Copy to Speed Up Collisions
+            if (newObject is Solid)
+                SolidObjectsCopy.Add((Solid) newObject);
         }
 
+        //
         public void Remove(GameObject objectToDelete)
         {
             throw new NotImplementedException();
+        }
+
+        //
+        public Solid CheckCollision(CollisionBox input)
+        {
+            foreach (Solid solid in SolidObjectsCopy)
+            {
+                if (solid.Active)
+                {
+                    if (solid.CollisionBox.Intersects(input))
+                        return solid;
+                }
+            }
+
+            return null;
         }
 
         //Passback

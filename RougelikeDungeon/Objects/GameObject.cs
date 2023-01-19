@@ -23,12 +23,16 @@ namespace RougelikeDungeon.Objects
         //Game Object
         public float Depth = 0.5f;
         public bool Active = true;
+        public CollisionBox CollisionBox;
 
         public GameObject() { }
 
         public virtual void Initalize() { }
 
-        public virtual void LoadContent(ContentManager content) { }
+        public virtual void LoadContent(ContentManager content) {
+            if (Sprite == null) return;
+            CollisionBox = new CollisionBox();
+        }
 
         public virtual void Update(List<GameObject> objects, GameTime gameTime) { }
 
@@ -46,9 +50,5 @@ namespace RougelikeDungeon.Objects
             if (Sprite == null) return;
             SpriteOffset = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
         }
-
-        //
-        // Draw Methods
-        //
     }
 }
