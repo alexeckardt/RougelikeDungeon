@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RougelikeDungeon.Objects.Collision;
 
 namespace RougelikeDungeon.Objects
 {
@@ -16,8 +17,8 @@ namespace RougelikeDungeon.Objects
         public GenericSolid(Vector2 StartPosition)
         {
             Position = StartPosition;
-            CollisionBox = new CollisionBox(8, 8);
-            CollisionBox.Position = StartPosition;
+            Collider = new CollisionBox(8, 8);
+            Collider.Position = StartPosition;
         }
 
         public override void Initalize()

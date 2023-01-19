@@ -7,19 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.Objects
+namespace RougelikeDungeon.Objects.Collision
 {
-    internal class CollisionBox
+    internal class CollisionBox : ICollideable
     {
-        public float X;
-        public float Y;
-        public float Width;
-        public float Height;
+        private float X;
+        private float Y;
+        private float Width;
+        private float Height;
 
-        public float Left => X;
-        public float Top => Y;
-        public float Right => X + Width;
-        public float Bottom => Y + Height;
+        private float OffsetX = 0;
+        private float OffsetY = 0;
+
+        public float Left => X - OffsetX;
+        public float Top => Y - OffsetY;
+        public float Right => X + Width - OffsetX;
+        public float Bottom => Y + Height - OffsetY;
 
         public Vector2 Position
         {
@@ -30,6 +33,7 @@ namespace RougelikeDungeon.Objects
                 Y = value.Y;
             }
         }
+
         public Vector2 Size
         {
             get => new Vector2(Width, Height);
@@ -40,29 +44,48 @@ namespace RougelikeDungeon.Objects
             }
         }
 
+        public Vector2 Offset
+        {
+            get => new Vector2(OffsetX, OffsetY);
+            set
+            {
+                OffsetX = value.X;
+                OffsetY = value.Y;
+            }
+        }
+
         public Vector2 Center => new Vector2(X + Width / 2, Y + Height / 2);
 
         //Constructors
 
-        public CollisionBox() 
+        public CollisionBox()
         {
         }
 
-        public CollisionBox(float x, float y, float width, float height)
-        {
-            this.X = x;
-            this.Y = y;
-            this.Width = width;
-            this.Height = height;
-        }
-        
         public CollisionBox(float width, float height)
         {
-            this.X = 0;
-            this.Y = 0;
-            this.Width = width;
-            this.Height = height;
+            Width = width;
+            Height = height;
         }
+        
+        public CollisionBox(float x, float y, float width, float height)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+        }
+        
+        public CollisionBox(float x, float y, float width, float height, float xoff, float yoff)
+        {
+            X = x;
+            Y = y;
+            Width = width;
+            Height = height;
+            OffsetX = xoff;
+            OffsetY = yoff;
+        }
+
 
         //Methods
 
@@ -86,15 +109,10 @@ namespace RougelikeDungeon.Objects
             return false;
         }
 
-        public override int GetHashCode()
-        {
-            //Stolen from Microsoft.XNA.Rectangle Hashcode
-            return (((17 * 23 + X.GetHashCode()) * 23 + Y.GetHashCode()) * 23 + Width.GetHashCode()) * 23 + Height.GetHashCode();
-        }
         public void Draw(SpriteBatch spriteBatch)
         {
             //Draw Behind All
-            spriteBatch.Draw(GlobalTextures.Instance.Pixel, Position, null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
+            spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
     }
 }

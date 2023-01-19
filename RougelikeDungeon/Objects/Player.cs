@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.Packets;
 using RougelikeDungeon.Utilities;
 using System;
@@ -40,6 +41,15 @@ namespace RougelikeDungeon.Objects
         public override void LoadContent(ContentManager content)
         {
             Sprite = content.Load<Texture2D>("player/player");
+
+            SpriteOffset = new Vector2(Sprite.Width/2, 5);
+
+
+            Collider = new CollisionBox();
+            Collider.Position = Position;
+            Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
+            Collider.Offset = SpriteOffset;
+
             base.LoadContent(content);
         }
 
@@ -50,12 +60,20 @@ namespace RougelikeDungeon.Objects
 
             //Move
             Position += inputDirection*(MoveSpeed);
+
+            //Update Base
+            base.Update(objects, gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            CollisionBox.Draw(spriteBatch);
+            //Draw My Position
+            spriteBatch.Draw(GlobalTextures.Instance.Pixel, Position, Color.Aqua);
 
+            //Collision Box
+            Collider.Draw(spriteBatch);
+
+            //Draw Me
             base.Draw(spriteBatch);
         }
 

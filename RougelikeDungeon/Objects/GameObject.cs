@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.Packets;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,7 @@ namespace RougelikeDungeon.Objects
     {
         //Sprite Data
         protected Texture2D Sprite;
-        protected Vector2 SpriteOffset; //generally should be constant
+        protected Vector2 SpriteOffset = Vector2.Zero; //generally should be constant
 
         //Visual
         public Vector2 Position = Vector2.Zero;
@@ -23,7 +24,7 @@ namespace RougelikeDungeon.Objects
         //Game Object
         public float Depth = 0.5f;
         public bool Active = true;
-        public CollisionBox CollisionBox;
+        public ICollideable Collider;
 
         public GameObject() { }
 
@@ -32,14 +33,14 @@ namespace RougelikeDungeon.Objects
         public virtual void LoadContent(ContentManager content) 
         {
             //Default Collision Box : Cover Whole Sprite
-            if (CollisionBox == null)
+            if (Collider == null)
             {
-                CollisionBox = new CollisionBox();
+                Collider = new CollisionBox();
 
                 if (Sprite != null)
                 {
-                    CollisionBox.Position = Position - SpriteOffset;
-                    CollisionBox.Size = new Vector2(Sprite.Width, Sprite.Height);
+                    Collider.Position = Position;
+                    Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
                 }
             }
         }
@@ -47,7 +48,8 @@ namespace RougelikeDungeon.Objects
         public virtual void Update(List<GameObject> objects, GameTime gameTime) 
         {
             //Update My Collision Box's Position
-            CollisionBox.Position = Position - SpriteOffset;
+            Collider.Position = Position;
+            Collider.Offset = SpriteOffset;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {

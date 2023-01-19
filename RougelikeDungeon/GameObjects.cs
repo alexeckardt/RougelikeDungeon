@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RougelikeDungeon.Objects;
+using RougelikeDungeon.Objects.Collision;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -45,7 +46,7 @@ namespace RougelikeDungeon
             {
                 if (solid.Active)
                 {
-                    if (solid.CollisionBox.Intersects(input))
+                    if (solid.Collider.Intersects(input))
                         return solid;
                 }
             }
@@ -59,7 +60,7 @@ namespace RougelikeDungeon
             {
                 if (solid.Active)
                 {
-                    if (solid.CollisionBox.Contains(input))
+                    if (solid.Collider.Contains(input))
                         return solid;
                 }
             }
