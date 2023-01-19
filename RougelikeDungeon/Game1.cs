@@ -31,10 +31,6 @@ namespace RougelikeDungeon
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-            player = new Player();
-            objects.Add(player);
-
             base.Initialize();
         }
 
@@ -42,7 +38,8 @@ namespace RougelikeDungeon
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            LoadObjects();
+            //Load Game Objects
+            LoadLevel();
         }
 
         protected override void Update(GameTime gameTime)
@@ -63,12 +60,19 @@ namespace RougelikeDungeon
             GraphicsDevice.Clear(Color.Black);
 
             //Draw to Sprite Batch
-            this._spriteBatch.Begin();
+            this._spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
                 DrawObjects();
             this._spriteBatch.End();
 
             //Draw
             base.Draw(gameTime);
+        }
+
+        public void LoadLevel()
+        {
+            objects.Add(new Player(new Vector2(3, 3)));
+
+            LoadObjects();
         }
 
         public void LoadObjects()
