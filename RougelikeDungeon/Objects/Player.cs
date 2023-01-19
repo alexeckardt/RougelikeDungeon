@@ -54,6 +54,8 @@ namespace RougelikeDungeon.Objects
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            CollisionBox.Draw(spriteBatch);
+
             base.Draw(spriteBatch);
         }
 

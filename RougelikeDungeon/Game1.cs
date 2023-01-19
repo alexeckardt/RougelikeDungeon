@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Packets;
+using RougelikeDungeon.Utilities;
 using System.Collections.Generic;
 
 namespace RougelikeDungeon
@@ -81,6 +82,8 @@ namespace RougelikeDungeon
                 obj.Initalize();
                 obj.LoadContent(this.Content);
             }
+
+            GlobalTextures.Instance.LoadContent(this.Content);
         }
 
         public void UpdateObjects(GameTime time)

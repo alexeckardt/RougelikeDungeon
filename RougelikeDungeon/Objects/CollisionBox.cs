@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +13,13 @@ namespace RougelikeDungeon.Objects
     {
         public float X;
         public float Y;
-        public float W;
-        public float H;
+        public float Width;
+        public float Height;
 
         public float Left => X;
         public float Top => Y;
-        public float Right => X + W;
-        public float Bottom => Y + H;
+        public float Right => X + Width;
+        public float Bottom => Y + Height;
 
         public Vector2 Position
         {
@@ -30,15 +32,15 @@ namespace RougelikeDungeon.Objects
         }
         public Vector2 Size
         {
-            get => new Vector2(W, H);
+            get => new Vector2(Width, Height);
             set
             {
-                W = value.X;
-                H = value.Y;
+                Width = value.X;
+                Height = value.Y;
             }
         }
 
-        public Vector2 Center => new Vector2(X + W / 2, Y + H / 2);
+        public Vector2 Center => new Vector2(X + Width / 2, Y + Height / 2);
 
         //Constructors
 
@@ -46,21 +48,29 @@ namespace RougelikeDungeon.Objects
         {
         }
 
-        public CollisionBox(float x, float y, float w, float h)
+        public CollisionBox(float x, float y, float width, float height)
         {
             this.X = x;
             this.Y = y;
-            this.W = w;
-            this.H = h;
+            this.Width = width;
+            this.Height = height;
+        }
+        
+        public CollisionBox(float width, float height)
+        {
+            this.X = 0;
+            this.Y = 0;
+            this.Width = width;
+            this.Height = height;
         }
 
         //Equalities
 
         public static bool operator ==(CollisionBox a, CollisionBox b)
         {
-            if (a.X == b.X && a.Y == b.Y && a.W == b.H)
+            if (a.X == b.X && a.Y == b.Y && a.Width == b.Height)
             {
-                return a.H == b.H;
+                return a.Height == b.Height;
             }
 
             return false;
@@ -94,9 +104,9 @@ namespace RougelikeDungeon.Objects
 
         public bool Contains(Vector2 point)
         {
-            if (X <= point.X && point.X <= X + W && Y <= point.Y)
+            if (X <= point.X && point.X <= X + Width && Y <= point.Y)
             {
-                return point.Y <= Y + H;
+                return point.Y <= Y + Height;
             }
 
             return false;
@@ -105,7 +115,12 @@ namespace RougelikeDungeon.Objects
         public override int GetHashCode()
         {
             //Stolen from Microsoft.XNA.Rectangle Hashcode
-            return (((17 * 23 + X.GetHashCode()) * 23 + Y.GetHashCode()) * 23 + W.GetHashCode()) * 23 + H.GetHashCode();
+            return (((17 * 23 + X.GetHashCode()) * 23 + Y.GetHashCode()) * 23 + Width.GetHashCode()) * 23 + Height.GetHashCode();
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            //Draw Behind All
+            spriteBatch.Draw(GlobalTextures.Instance.Pixel, Position, null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
     }
 }

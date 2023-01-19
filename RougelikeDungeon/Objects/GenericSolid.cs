@@ -16,12 +16,9 @@ namespace RougelikeDungeon.Objects
         public GenericSolid(Vector2 StartPosition)
         {
             Position = StartPosition;
-            CollisionBox = new CollisionBox(0, 0, 8, 8);
+            CollisionBox = new CollisionBox(8, 8);
+            CollisionBox.Position = StartPosition;
         }
-
-        //
-        //
-        //
 
         public override void Initalize()
         {
@@ -30,37 +27,18 @@ namespace RougelikeDungeon.Objects
 
         public override void LoadContent(ContentManager content)
         {
-            Sprite = content.Load<Texture2D>("core/pixel");
+            Sprite = GlobalTextures.Instance.Pixel;
             base.LoadContent(content);
         }
 
         public override void Update(List<GameObject> objects, GameTime gameTime)
         {
-            var time = gameTime.ElapsedGameTime.TotalSeconds;
-            var inputDirection = GetKeyboardInputDirection().Normalized();
-
-            //Move
-            Position += inputDirection * (MoveSpeed);
+            base.Update(objects, gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
-        }
-
-        //
-        private Vector2 GetKeyboardInputDirection()
-        {
-            Input input = Input.Instance;
-
-            //Update
-            var left = input.IsKeyDownInt(Keys.Left);
-            var right = input.IsKeyDownInt(Keys.Right);
-            var up = input.IsKeyDownInt(Keys.Up);
-            var down = input.IsKeyDownInt(Keys.Down);
-
-            //Get an Input Direction
-            return new Vector2(right - left, down - up);
         }
     }
 }

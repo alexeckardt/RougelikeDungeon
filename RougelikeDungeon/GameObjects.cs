@@ -17,7 +17,10 @@ namespace RougelikeDungeon
         public GameObjects()
         {
            this.Objects  = new List<GameObject>();
+           this.SolidObjectsCopy = new List<Solid>();
         }
+
+        //Object Addition
 
         public void Add(GameObject newObject)
         {
@@ -34,8 +37,9 @@ namespace RougelikeDungeon
             throw new NotImplementedException();
         }
 
-        //
-        public Solid CheckCollision(CollisionBox input)
+        //Solid Collision Check
+
+        public Solid CheckSolidCollision(CollisionBox input)
         {
             foreach (Solid solid in SolidObjectsCopy)
             {
@@ -49,7 +53,22 @@ namespace RougelikeDungeon
             return null;
         }
 
+        public Solid CheckSolidCollision(Vector2 input)
+        {
+            foreach (Solid solid in SolidObjectsCopy)
+            {
+                if (solid.Active)
+                {
+                    if (solid.CollisionBox.Contains(input))
+                        return solid;
+                }
+            }
+
+            return null;
+        }
+
         //Passback
+
         public List<GameObject> AsList() => Objects;
     }
 }
