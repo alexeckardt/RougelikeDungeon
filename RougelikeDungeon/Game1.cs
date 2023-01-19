@@ -12,9 +12,7 @@ namespace RougelikeDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        Player player;
-
-        List<GameObject> objects = new List<GameObject>();
+        GameObjects objects;
 
         public Game1()
         {
@@ -31,6 +29,8 @@ namespace RougelikeDungeon
 
         protected override void Initialize()
         {
+            objects = new GameObjects();
+
             base.Initialize();
         }
 
@@ -77,7 +77,7 @@ namespace RougelikeDungeon
 
         public void LoadObjects()
         {
-            foreach (GameObject obj in objects) {
+            foreach (GameObject obj in objects.AsList()) {
                 obj.Initalize();
                 obj.LoadContent(this.Content);
             }
@@ -85,15 +85,15 @@ namespace RougelikeDungeon
 
         public void UpdateObjects(GameTime time)
         {
-            foreach (GameObject obj in objects)
+            foreach (GameObject obj in objects.AsList())
             {
-                obj.Update(objects, time);
+                obj.Update(objects.AsList(), time);
             }
         }
 
         public void DrawObjects()
         {
-            foreach (GameObject obj in objects)
+            foreach (GameObject obj in objects.AsList())
             {
                 obj.Draw(this._spriteBatch);
             }
