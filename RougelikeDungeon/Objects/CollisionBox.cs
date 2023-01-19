@@ -64,32 +64,6 @@ namespace RougelikeDungeon.Objects
             this.Height = height;
         }
 
-        //Equalities
-
-        public static bool operator ==(CollisionBox a, CollisionBox b)
-        {
-            if (a.X == b.X && a.Y == b.Y && a.Width == b.Height)
-            {
-                return a.Height == b.Height;
-            }
-
-            return false;
-        }
-
-        public static bool operator !=(CollisionBox a, CollisionBox b)
-        {
-            return !(a == b);
-        }
-        public override bool Equals(object obj)
-        {
-            if (obj is CollisionBox)
-            {
-                return this == (CollisionBox)obj;
-            }
-
-            return false;
-        }
-
         //Methods
 
         public bool Intersects(CollisionBox other)

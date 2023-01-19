@@ -78,12 +78,12 @@ namespace RougelikeDungeon
 
         public void LoadObjects()
         {
+            GlobalTextures.Instance.LoadContent(this.Content);
+
             foreach (GameObject obj in objects.AsList()) {
                 obj.Initalize();
                 obj.LoadContent(this.Content);
             }
-
-            GlobalTextures.Instance.LoadContent(this.Content);
         }
 
         public void UpdateObjects(GameTime time)
