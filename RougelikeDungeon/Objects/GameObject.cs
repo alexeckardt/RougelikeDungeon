@@ -19,7 +19,7 @@ namespace RougelikeDungeon.Objects
         public Color Tint = Color.White;
         public float Scale = 1.0f;
         public float Rotation = 0f;
-
+        
         //Game Object
         public float Depth = 0.5f;
         public bool Active = true;
