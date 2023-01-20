@@ -11,7 +11,7 @@ namespace RougelikeDungeon.Objects.Collision
 {
     internal class MultiCollisions : ICollideable
     {
-        List<ICollideable> Collideables;
+        readonly List<ICollideable> Collideables;
 
         private float masterX;
         private float masterY;
@@ -48,6 +48,12 @@ namespace RougelikeDungeon.Objects.Collision
         public float Right => throw new NotImplementedException();
 
         public float Bottom => throw new NotImplementedException();
+
+
+        public MultiCollisions() 
+        { 
+            Collideables = new List<ICollideable>();
+        }
 
         public bool Contains(Vector2 point)
         {

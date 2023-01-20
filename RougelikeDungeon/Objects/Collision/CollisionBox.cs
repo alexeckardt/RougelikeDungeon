@@ -39,8 +39,15 @@ namespace RougelikeDungeon.Objects.Collision
             get => new Vector2(Width, Height);
             set
             {
-                Width = value.X;
-                Height = value.Y;
+                //Move Collision Box to Correct Position, Don't Allow Negative Dimensions
+                if (value.X < 0)
+                    X += value.X;
+
+                if (value.Y < 0)
+                    Y += value.Y;
+
+                Width = Math.Abs(value.X);
+                Height = Math.Abs(value.Y);
             }
         }
 
@@ -64,26 +71,31 @@ namespace RougelikeDungeon.Objects.Collision
 
         public CollisionBox(float width, float height)
         {
-            Width = width;
-            Height = height;
+            Position = new Vector2(0, 0);
+            Size = new Vector2(width, height);
+        }
+        
+        public CollisionBox(Vector2 position, float width, float height)
+        {
+            Position = position;
+            Size = new Vector2(width, height);
         }
         
         public CollisionBox(float x, float y, float width, float height)
         {
             X = x;
             Y = y;
-            Width = width;
-            Height = height;
+            Size = new Vector2(width, height);
         }
         
         public CollisionBox(float x, float y, float width, float height, float xoff, float yoff)
         {
             X = x;
             Y = y;
-            Width = width;
-            Height = height;
             OffsetX = xoff;
             OffsetY = yoff;
+
+            Size = new Vector2(width, height);
         }
 
 
@@ -112,6 +124,7 @@ namespace RougelikeDungeon.Objects.Collision
         public void Draw(SpriteBatch spriteBatch)
         {
             //Draw Behind All
+            spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
             spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
     }

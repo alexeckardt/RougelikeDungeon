@@ -71,7 +71,9 @@ namespace RougelikeDungeon
 
         public void LoadLevel()
         {
-            objects.Add(new Player(new Vector2(3, 3)));
+            objects.Add(new Player(new Vector2(30, 30)));
+
+            objects.Add(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
 
             LoadObjects();
         }

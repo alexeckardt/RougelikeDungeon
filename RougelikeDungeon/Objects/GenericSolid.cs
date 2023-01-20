@@ -16,9 +16,14 @@ namespace RougelikeDungeon.Objects
     {
         public GenericSolid(Vector2 StartPosition)
         {
-            Position = StartPosition;
-            Collider = new CollisionBox(8, 8);
-            Collider.Position = StartPosition;
+            Collider = new CollisionBox(StartPosition, 8, 8);
+            Position = StartPosition; //Move to Correct Position
+        }
+
+        public GenericSolid(Vector2 StartPosition, Vector2 TilesScale)
+        {
+            Collider = new CollisionBox(StartPosition, TilesScale.X*8, TilesScale.Y*8);
+            Position = Collider.Position; //Move to Correct Position
         }
 
         public override void Initalize()
@@ -39,7 +44,8 @@ namespace RougelikeDungeon.Objects
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);
+            Collider.Draw(spriteBatch);
+            //base.Draw(spriteBatch);
         }
     }
 }
