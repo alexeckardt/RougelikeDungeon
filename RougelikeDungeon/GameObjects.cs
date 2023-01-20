@@ -13,12 +13,12 @@ namespace RougelikeDungeon
     internal class GameObjects
     {
         private List<GameObject> Objects;
-        private List<Solid> SolidObjectsCopy;
+        private SolidCollisions Collisions;
 
         public GameObjects()
         {
            this.Objects  = new List<GameObject>();
-           this.SolidObjectsCopy = new List<Solid>();
+           Collisions = new SolidCollisions();
         }
 
         //Object Addition
@@ -29,7 +29,7 @@ namespace RougelikeDungeon
 
             //Store in a Seperate Copy to Speed Up Collisions
             if (newObject is Solid)
-                SolidObjectsCopy.Add((Solid) newObject);
+                Collisions.Add((Solid) newObject);
         }
 
         //
@@ -38,38 +38,11 @@ namespace RougelikeDungeon
             throw new NotImplementedException();
         }
 
-        //Solid Collision Check
-
-        public Solid CheckSolidCollision(CollisionBox input)
-        {
-            foreach (Solid solid in SolidObjectsCopy)
-            {
-                if (solid.Active)
-                {
-                    if (solid.Collider.Intersects(input))
-                        return solid;
-                }
-            }
-
-            return null;
-        }
-
-        public Solid CheckSolidCollision(Vector2 input)
-        {
-            foreach (Solid solid in SolidObjectsCopy)
-            {
-                if (solid.Active)
-                {
-                    if (solid.Collider.Contains(input))
-                        return solid;
-                }
-            }
-
-            return null;
-        }
-
         //Passback
-
         public List<GameObject> AsList() => Objects;
+
+        public Solid CheckSolidCollision(CollisionBox input) => Collisions.CheckSolidCollision(input);
+        public Solid CheckSolidCollision(CollisionBox input, Vector2 boxOffsetPosition) => Collisions.CheckSolidCollision(input, boxOffsetPosition);
+        public Solid CheckSolidPosition(Vector2 input) => Collisions.CheckSolidCollision(input);
     }
 }

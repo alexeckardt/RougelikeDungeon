@@ -73,6 +73,8 @@ namespace RougelikeDungeon
         {
             objects.Add(new Player(new Vector2(30, 30)));
 
+            
+            
             objects.Add(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
 
             LoadObjects();
@@ -92,7 +94,7 @@ namespace RougelikeDungeon
         {
             foreach (GameObject obj in objects.AsList())
             {
-                obj.Update(objects.AsList(), time);
+                obj.Update(objects, time);
             }
         }
 

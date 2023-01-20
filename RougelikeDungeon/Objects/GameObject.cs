@@ -24,6 +24,8 @@ namespace RougelikeDungeon.Objects
         //Game Object
         public float Depth = 0.5f;
         public bool Active = true;
+
+        //Collision
         public ICollideable Collider;
 
         public GameObject() { }
@@ -45,7 +47,7 @@ namespace RougelikeDungeon.Objects
             }
         }
 
-        public virtual void Update(List<GameObject> objects, GameTime gameTime) 
+        public virtual void Update(GameObjects objects, GameTime gameTime) 
         {
             //Update My Collision Box's Position
             Collider.Position = Position;

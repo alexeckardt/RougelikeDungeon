@@ -127,5 +127,7 @@ namespace RougelikeDungeon.Objects.Collision
             spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
             spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
+
+        public CollisionBox GetCopy() => new CollisionBox(X, Y, Width, Height, OffsetX, OffsetY);
     }
 }

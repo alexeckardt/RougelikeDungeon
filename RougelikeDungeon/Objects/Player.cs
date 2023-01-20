@@ -16,7 +16,9 @@ namespace RougelikeDungeon.Objects
     internal class Player : GameObject
     {
         public Vector2 Velocity;
-        public float MoveSpeed = 1.0f;
+        public float MoveSpeed = 64f;
+        public float MoveSlip = 0.4f;
+        public float CollisionStep = 0.25f;
 
 
         //Empty Constructor
@@ -53,13 +55,19 @@ namespace RougelikeDungeon.Objects
             base.LoadContent(content);
         }
 
-        public override void Update(List<GameObject> objects, GameTime gameTime)
+        public override void Update(GameObjects objects, GameTime gameTime)
         {
-            var time = gameTime.ElapsedGameTime.TotalSeconds;
+            var time = (float) gameTime.ElapsedGameTime.TotalSeconds;
             var inputDirection = GetKeyboardInputDirection().Normalized();
 
             //Move
-            Position += inputDirection*(MoveSpeed);
+            Velocity = Vector2.Lerp(Velocity, inputDirection * MoveSpeed, MoveSlip);
+
+            //Collision
+            Vector2 MoveVel = DoCollision(Velocity * time, objects);
+
+            //Add To Position
+            Position += MoveVel;
 
             //Update Base
             base.Update(objects, gameTime);
@@ -90,6 +98,67 @@ namespace RougelikeDungeon.Objects
 
             //Get an Input Direction
             return new Vector2(right - left, down - up);
+        }
+
+        private Vector2 DoCollision(Vector2 MoveVel, GameObjects objects)
+        {
+            Solid collider = objects.CheckSolidCollision((CollisionBox)Collider, MoveVel);
+            if (collider != null) //Collision Hit
+            {
+                Vector2 stepVelocity = MoveVel.Signed() * CollisionStep;
+                Vector2 stepVelocityY = new Vector2(0, stepVelocity.Y);
+                Vector2 stepVelocityX = new Vector2(stepVelocity.X, 0);
+
+                //Move Y
+                if (stepVelocity.Y != 0)
+                {
+                    for (float i = CollisionStep; i <= 1f; i += CollisionStep)
+                    {
+                        var subStepCollidedSolid = objects.CheckSolidCollision((CollisionBox)Collider, stepVelocityY);
+                        bool freeMove = subStepCollidedSolid == null;
+
+                        if (freeMove)
+                        {
+                            Position += stepVelocityY;
+                            Collider.Position += stepVelocityY;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    Velocity.Y = 0;
+                    MoveVel.Y = 0;
+                }
+
+                //Move X
+                if (stepVelocity.X != 0)
+                {
+                    for (float i = CollisionStep; i <= 1f; i += CollisionStep)
+                    {
+                        var subStepCollidedSolid = objects.CheckSolidCollision((CollisionBox)Collider, stepVelocityX);
+                        bool freeMove = subStepCollidedSolid == null;
+
+                        if (freeMove)
+                        {
+                            Position += stepVelocityX;
+                            Collider.Position += stepVelocityX;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    Velocity.X = 0;
+                    MoveVel.X = 0;
+                }
+
+                //These are done seperately to avoid corner clipping
+            }
+
+            return MoveVel;
         }
     }
 }
