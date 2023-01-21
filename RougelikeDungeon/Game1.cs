@@ -73,7 +73,7 @@ namespace RougelikeDungeon
             this._spriteBatch.Begin(
                     SpriteSortMode.BackToFront, 
                     BlendState.AlphaBlend, 
-                    SamplerState.PointClamp, 
+                    SamplerState.PointWrap, 
                     DepthStencilState.None, 
                     RasterizerState.CullNone, 
                     null, 

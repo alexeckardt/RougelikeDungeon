@@ -21,6 +21,11 @@ namespace RougelikeDungeon
         {
             return new Vector2((int) v.X, (int) v.Y);
         }
+        
+        public static Vector2 Rounded(this Vector2 v)
+        {
+            return new Vector2((float) Math.Round(v.X), (float)Math.Round(v.Y));
+        }
 
         public static Vector2 Signed(this Vector2 v)
         {

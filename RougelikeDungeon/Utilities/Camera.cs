@@ -31,7 +31,7 @@ namespace RougelikeDungeon.Utilities
         private Vector2 RealPosition;
         private Vector2 GoalPosition;
         private Vector2 GoalPositionOffset = Vector2.Zero;
-        private float CameraSmoothness = 12f;
+        private float CameraSmoothness = 50f;
 
         private Camera()
         {
@@ -75,8 +75,8 @@ namespace RougelikeDungeon.Utilities
         {
             var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            GoalPosition = follow.Floored();
-            RealPosition = Vector2.Lerp(RealPosition, GoalPosition, CameraSmoothness * time);
+            //GoalPosition = follow;
+            //RealPosition = Vector2.Lerp(RealPosition, GoalPosition, CameraSmoothness * time);
 
             //Reset, Floor Positions
             //Position += FractionalPosition;
@@ -85,7 +85,7 @@ namespace RougelikeDungeon.Utilities
             //Position = IntegerPosition;
 
             //Calculate Camera Matrix
-            Position = RealPosition.Floored();
+            Position = follow;
             CalculateMatrixAndRectangle();
         }
 
