@@ -156,7 +156,7 @@ namespace RougelikeDungeon.Utilities
             input.X -= Resolution.VirtualViewportX;
             input.Y -= Resolution.VirtualViewportY;
 
-            return Vector2.Transform(input, Matrix.Invert(Camera.GetTransformMatrix()));
+            return Vector2.Transform(input, Matrix.Invert(Camera.Instance.GetTransformMatrix()));
         }
     }
 }

@@ -8,29 +8,38 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using RougelikeDungeon.Objects;
 
 //Thanks to David Amador and o KB o. Static since we will only have one camera.
 
 namespace RougelikeDungeon.Utilities
 {
-    public class Camera
+    internal class Camera
     {
-        private Matrix transformMatrix; //A transformation matrix containing info on our position, how much we are rotated and zoomed etc.
-        private Vector2 position;
-        public float rotation;
+        private Matrix TransformMatrix; //A transformation matrix containing info on our position, how much we are rotated and zoomed etc.
+        
+
+        public float Rotation;
         private float zoom;
         private Rectangle screenRect;
        
-        public bool updateYAxis = false; //Should the camera move along on the y axis?
+        public bool updateYAxis = true; //Should the camera move along on the y axis?
         public bool updateXAxis = true; //Should the camera move along on the x axis?
+
+        //Position
+        private Vector2 Position;
+        private Vector2 RealPosition;
+        private Vector2 GoalPosition;
+        private Vector2 GoalPositionOffset = Vector2.Zero;
+        private float CameraSmoothness = 12f;
 
         private Camera()
         {
             zoom = 1.0f;
-            rotation = 0.0f;
+            Rotation = 0.0f;
 
             //Start the camera at the center of the screen:
-            position = new Vector2(Resolution.VirtualWidth / 2, Resolution.VirtualHeight / 2);
+            Position = new Vector2(Resolution.VirtualWidth / 2, Resolution.VirtualHeight / 2);
         }
 
         private static Camera inst;
@@ -62,21 +71,24 @@ namespace RougelikeDungeon.Utilities
             }
         }
 
-        public void Update(Vector2 follow)
+        public void Update(Vector2 follow, GameTime gameTime)
         {
-            UpdateMovement(follow);
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            GoalPosition = follow.Floored();
+            RealPosition = Vector2.Lerp(RealPosition, GoalPosition, CameraSmoothness * time);
+
+            //Reset, Floor Positions
+            //Position += FractionalPosition;
+            //FractionalPosition = new Vector2(Position.X % 1, Position.Y % 1);
+            //IntegerPosition = Position - FractionalPosition;
+            //Position = IntegerPosition;
+
+            //Calculate Camera Matrix
+            Position = RealPosition.Floored();
             CalculateMatrixAndRectangle();
         }
 
-        private void UpdateMovement(Vector2 follow)
-        {
-            //Make the camera center on and follow the position:
-            if (updateXAxis == true)
-                position.X += ((follow.X - position.X)); //Camera will follow the position passed in
-
-            if (updateYAxis == true)
-                position.Y += ((follow.Y - position.Y)); //Camera will follow the position passed in
-        }
 
         /// <summary>
         /// Immediately sets the camera to look at the position passed in.
@@ -85,9 +97,9 @@ namespace RougelikeDungeon.Utilities
         {
             //Immediately looks at the vector passed in:
             if (updateXAxis == true)
-                position.X = lookAt.X;
+                Position.X = lookAt.X;
             if (updateYAxis == true)
-                position.Y = lookAt.Y;
+                Position.Y = lookAt.Y;
         }
 
         private void CalculateMatrixAndRectangle()
@@ -96,16 +108,16 @@ namespace RougelikeDungeon.Utilities
             //we'll calculate them once each frame and store them... when someone needs these variables we will simply return the stored variable instead of re cauclating them every time.
 
             //Calculate the camera transform matrix:
-            transformMatrix = Matrix.CreateTranslation(new Vector3(-position, 0)) * Matrix.CreateRotationZ(rotation) *
+            TransformMatrix = Matrix.CreateTranslation(new Vector3(-Position, 0)) * Matrix.CreateRotationZ(Rotation) *
                         Matrix.CreateScale(new Vector3(zoom, zoom, 1)) * Matrix.CreateTranslation(new Vector3(Resolution.VirtualWidth
                             * 0.5f, Resolution.VirtualHeight * 0.5f, 0));
 
             //Now combine the camera's matrix with the Resolution Manager's transform matrix to get our final working matrix:
-            transformMatrix = transformMatrix * Resolution.getTransformationMatrix();
+            TransformMatrix = TransformMatrix * Resolution.getTransformationMatrix();
 
             //Round the X and Y translation so the camera doesn't jerk as it moves:
-            transformMatrix.M41 = (float)Math.Round(transformMatrix.M41, 0);
-            transformMatrix.M42 = (float)Math.Round(transformMatrix.M42, 0);
+            TransformMatrix.M41 = (float)Math.Round(TransformMatrix.M41, 0);
+            TransformMatrix.M42 = (float)Math.Round(TransformMatrix.M42, 0);
 
             //Calculate the rectangle that represents where our camera is at in the world:
             screenRect = VisibleArea();
@@ -116,7 +128,7 @@ namespace RougelikeDungeon.Utilities
         /// </summary>
         private Rectangle VisibleArea()
         {
-            Matrix inverseViewMatrix = Matrix.Invert(transformMatrix);
+            Matrix inverseViewMatrix = Matrix.Invert(TransformMatrix);
             Vector2 tl = Vector2.Transform(Vector2.Zero, inverseViewMatrix);
             Vector2 tr = Vector2.Transform(new Vector2(Resolution.VirtualWidth, 0), inverseViewMatrix);
             Vector2 bl = Vector2.Transform(new Vector2(0, Resolution.VirtualHeight), inverseViewMatrix);
@@ -132,7 +144,7 @@ namespace RougelikeDungeon.Utilities
 
         public Matrix GetTransformMatrix()
         {
-            return transformMatrix; //Return the transformMatrix we calculated earlier in this frame.
+            return TransformMatrix; //Return the transformMatrix we calculated earlier in this frame.
         }
     }
 }

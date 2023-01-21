@@ -14,6 +14,8 @@ namespace RougelikeDungeon
         private SpriteBatch _spriteBatch;
 
         GameObjects objects;
+        Player player;
+        Camera camera;
 
         public Game1()
         {
@@ -31,6 +33,7 @@ namespace RougelikeDungeon
         protected override void Initialize()
         {
             objects = new GameObjects();
+            camera = Camera.Instance;
 
             base.Initialize();
         }
@@ -50,6 +53,9 @@ namespace RougelikeDungeon
 
             //Update Objects
             UpdateObjects(gameTime);
+
+            //Update Camera
+            camera.Update(player.Position, gameTime);
 
             //Update Game
             base.Update(gameTime);
@@ -71,7 +77,8 @@ namespace RougelikeDungeon
                     DepthStencilState.None, 
                     RasterizerState.CullNone, 
                     null, 
-                    Resolution.getTransformationMatrix());
+                    //Resolution.getTransformationMatrix());
+                    camera.GetTransformMatrix());
 
                 //Draw
                 DrawObjects();
@@ -79,7 +86,7 @@ namespace RougelikeDungeon
             //End
             this._spriteBatch.End();
 
-            //Pass SpriteBatch Into GUI
+            //Pass SpriteBatch Into GUI, do Resolution.getTransformMatrix() for last input
 
             //Draw
             base.Draw(gameTime);
@@ -87,10 +94,8 @@ namespace RougelikeDungeon
 
         public void LoadLevel()
         {
-            objects.Add(new Player(new Vector2(30, 30)));
-
-            
-            
+            player = new Player(new Vector2(30, 30));
+            objects.Add(player);
             objects.Add(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
 
             LoadObjects();

@@ -16,6 +16,12 @@ namespace RougelikeDungeon
             float num = 1f / MathF.Sqrt(v.X * v.X + v.Y * v.Y);
             return v * num;
         }
+        
+        public static Vector2 Floored(this Vector2 v)
+        {
+            return new Vector2((int) v.X, (int) v.Y);
+        }
+
         public static Vector2 Signed(this Vector2 v)
         {
             float x = v.X;
