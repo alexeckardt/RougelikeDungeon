@@ -22,10 +22,10 @@ namespace RougelikeDungeon
             IsMouseVisible = true;
 
             //Set Resolution
-            _graphics.PreferredBackBufferWidth = 320;
-            _graphics.PreferredBackBufferHeight = 180;
-            _graphics.IsFullScreen = false;
-            _graphics.ApplyChanges();
+            Resolution.Init(ref _graphics);
+            Resolution.SetVirtualResolution(320, 180); //Camera Screen Width
+
+            Resolution.SetResolution(960, 540, false); //Window Size
         }
 
         protected override void Initialize()
@@ -60,10 +60,26 @@ namespace RougelikeDungeon
             //Clear
             GraphicsDevice.Clear(Color.Black);
 
+            //Set Resoli
+            Resolution.BeginDraw();
+
             //Draw to Sprite Batch
-            this._spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+            this._spriteBatch.Begin(
+                    SpriteSortMode.BackToFront, 
+                    BlendState.AlphaBlend, 
+                    SamplerState.PointClamp, 
+                    DepthStencilState.None, 
+                    RasterizerState.CullNone, 
+                    null, 
+                    Resolution.getTransformationMatrix());
+
+                //Draw
                 DrawObjects();
+
+            //End
             this._spriteBatch.End();
+
+            //Pass SpriteBatch Into GUI
 
             //Draw
             base.Draw(gameTime);
