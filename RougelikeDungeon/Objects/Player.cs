@@ -15,11 +15,11 @@ namespace RougelikeDungeon.Objects
 {
     internal class Player : GameObject
     {
+        //
         public Vector2 Velocity;
         public float MoveSpeed = 64f;
-        public float MoveSlip = 0.4f;
+        public float MoveSlip = 25f;
         public float CollisionStep = 0.25f;
-
 
         //Empty Constructor
         public Player() { }
@@ -61,7 +61,7 @@ namespace RougelikeDungeon.Objects
             var inputDirection = GetKeyboardInputDirection().Normalized();
 
             //Move
-            Velocity = Vector2.Lerp(Velocity, inputDirection * MoveSpeed, MoveSlip);
+            Velocity = Vector2.Lerp(Velocity, inputDirection * MoveSpeed, MoveSlip * time);
 
             //Collision
             Vector2 MoveVel = DoCollision(Velocity * time, objects);
