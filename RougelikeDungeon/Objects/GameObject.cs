@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace RougelikeDungeon.Objects
 {
-    internal class GameObject
+    internal class GameObject : IGameObject
     {
         //Sprite Data
         protected Texture2D Sprite;
