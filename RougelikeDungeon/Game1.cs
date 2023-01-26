@@ -57,6 +57,14 @@ namespace RougelikeDungeon
             //Update
             Input.Instance.Update();
 
+            if (player.Guns != null)
+            {
+                if (player.Guns.RequiredLoadContent)
+                {
+                    player.Guns.LoadContent(this.Content);
+                }
+            }
+
             //Update Objects
             UpdateObjects(gameTime);
 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.Guns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace RougelikeDungeon
         {
             get
             {
-                if (instance == null) instance = new GameConstants();
+                instance ??= new GameConstants();
                 return instance;
             }
         }
@@ -29,25 +30,30 @@ namespace RougelikeDungeon
 
         public float BulletDepth = 0.2f;
 
-        public Color EnemyBulletColor = new Color(0xff0000);
+        public Color EnemyBulletColor = new(0xff0000);
 
-        public Color CommonRarityColor = new Color(0xffffffff);
+        public Dictionary<GunRarity, Color> RarityColorMap;
 
-        public Color UnCommonRarityColor = new Color(0x20ff00);
+        public Color GetRarityColour(GunRarity rarity) => RarityColorMap.GetValueOrDefault(rarity);
 
-        public Color RareRarityColor = new Color(0x00f5ff);
+        //
 
-        public Color EpicRarityColor = new Color(0xff00ff);
+        private GameConstants() {
 
-        public Color LegendaryRarityColor = new Color(0xffff00);
-
-
-
-        private GameConstants() { }
+            //Setup Colour Map
+            RarityColorMap = new();
+            RarityColorMap.Add(GunRarity.Common, new(0xffffffff));
+            RarityColorMap.Add(GunRarity.UnCommon, new(0x20ff00ff));
+            RarityColorMap.Add(GunRarity.Rare, new(0x00f5ffff));
+            RarityColorMap.Add(GunRarity.Epic, new(0xff00ffff));
+            RarityColorMap.Add(GunRarity.Legendary, new(0xffff00ff));
+        }
 
         public void LoadContent(ContentManager Content)
         {
             Pixel = Content.Load<Texture2D>("core/pixel");
+
+
         }
 
     }

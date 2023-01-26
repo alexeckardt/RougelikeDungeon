@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace RougelikeDungeon.Guns.Guns
 {
@@ -46,6 +47,8 @@ namespace RougelikeDungeon.Guns.Guns
 
         public Texture2D Sprite => sprite;
 
+        public Vector2 SpriteOffset => spriteOffset;
+
         public GunRarity Rarity => GunRarity.Common;
 
         public Vector2 BulletSpawnOffset => absoluteBulletSpawnOffset;
@@ -56,7 +59,7 @@ namespace RougelikeDungeon.Guns.Guns
 
         public void LoadContent(ContentManager content)
         {
-            sprite = content.Load<Texture2D>("guns/defPistol");
+            sprite = content.Load<Texture2D>("gun/defPistol");
             spriteOffset = new Vector2(0, 3);
             absoluteBulletSpawnOffset = new Vector2(Sprite.Width, 2);
         }

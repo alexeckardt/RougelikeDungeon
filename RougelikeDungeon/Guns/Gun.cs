@@ -43,6 +43,8 @@ namespace RougelikeDungeon.Objects.Guns
         //Visual
         public Texture2D Sprite { get; }
 
+        public Vector2 SpriteOffset { get; }
+
         public GunRarity Rarity { get; }
 
         public Vector2 BulletSpawnOffset { get; }

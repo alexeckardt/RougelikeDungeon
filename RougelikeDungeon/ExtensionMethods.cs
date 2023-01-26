@@ -40,5 +40,11 @@ namespace RougelikeDungeon
 
             return new Vector2(x, y);
         }
+        
+        public static float Angle(this Vector2 v)
+        {
+            return (float) (Math.Atan2(-v.Y, -v.X));
+        }
+
     }
 }

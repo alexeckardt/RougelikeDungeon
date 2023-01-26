@@ -1,4 +1,5 @@
-﻿using RougelikeDungeon.Guns;
+﻿using Microsoft.Xna.Framework.Content;
+using RougelikeDungeon.Guns;
 using RougelikeDungeon.Guns.Guns;
 using RougelikeDungeon.Objects.Guns;
 using System;
@@ -18,6 +19,8 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         private int Slot0 = 0;
         private int Slot1 = 0;
 
+        public bool RequiredLoadContent = true;
+
         public GunWrapper CurrentGun 
         { 
             get 
@@ -30,6 +33,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         {
             Guns = new List<GunWrapper>();
             GunSelected = 0;
+            RequiredLoadContent = true;
 
             AddGun(new DefaultPistol());
         }
@@ -43,6 +47,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         public void AddGun(GunWrapper newWrapper)
         {
             Guns.Add(newWrapper);
+            RequiredLoadContent = true;
         }
 
         public void DeleteGun(int i)
@@ -75,6 +80,15 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             if (CurrentGun.EmptyClip)
             {
                 CurrentGun.BeginPullout();
+            }
+        }
+
+        public void LoadContent(ContentManager Content)
+        {
+            //
+            foreach (GunWrapper gun in this.Guns) {
+                gun.LoadContent(Content);
+                RequiredLoadContent = false;
             }
         }
     }

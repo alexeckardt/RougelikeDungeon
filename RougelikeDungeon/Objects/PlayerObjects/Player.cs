@@ -56,7 +56,6 @@ namespace RougelikeDungeon.Objects.PlayerObjects
 
             SpriteOffset = new Vector2(Sprite.Width/2, 5);
 
-
             Collider = new CollisionBox();
             Collider.Position = Position;
             Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
@@ -95,6 +94,18 @@ namespace RougelikeDungeon.Objects.PlayerObjects
 
             //Draw Me
             base.Draw(spriteBatch);
+
+            //Draw Gun Ontop
+            var gun = Guns.CurrentGun.Gun;
+
+            if (gun.Sprite != null)
+            {
+                Vector2 MousePos = Input.Instance.MousePositionCamera();
+                Vector2 ShootDirection = (Position - MousePos).Normalized();
+                var rot = Rotation + ShootDirection.Angle();
+
+                spriteBatch.Draw(gun.Sprite, Position, null, GameConstants.Instance.GetRarityColour(gun.Rarity), rot, gun.SpriteOffset, Scale, SpriteEffects.None, Depth);
+            }
         }
 
         //
@@ -196,8 +207,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
 
                 //Get Information
                 Vector2 MousePos = Input.Instance.MousePositionCamera();
-
-                Vector2 ShootDirection = Position - MousePos;
+                Vector2 ShootDirection = (Position - MousePos).Normalized();
 
 
                 //Figure Out Where To Spawn Bullet

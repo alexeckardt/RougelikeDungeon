@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using RougelikeDungeon.Guns.Guns;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Bullets;
@@ -122,6 +123,11 @@ namespace RougelikeDungeon.Guns
             inst.DamageAmount = spec.DamageAmount;
 
             return inst;
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            gun.LoadContent(content);
         }
     }
 }
