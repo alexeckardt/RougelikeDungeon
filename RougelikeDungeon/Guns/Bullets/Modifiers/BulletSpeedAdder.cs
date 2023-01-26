@@ -11,7 +11,7 @@ namespace RougelikeDungeon.Guns.Bullets.Modifiers
     {
         private float SpeedAmount = 0f;
 
-        public BulletSpeedAdder(float addAmount, IBullet core)
+        public BulletSpeedAdder(float addAmount, IBaseBulletSpec core)
         {
             SpeedAmount = addAmount;
             base.core = core;
@@ -29,8 +29,8 @@ namespace RougelikeDungeon.Guns.Bullets.Modifiers
 
         public override float PenatrationForce => base.core.PenatrationForce;
 
-        public override IBullet BulletSpawnOnDeath => base.core.BulletSpawnOnDeath;
+        public override IBaseBulletSpec BulletSpawnOnDeath => base.core.BulletSpawnOnDeath;
 
-        public override IBullet Core => base.core.Core;
+        public override IBaseBulletSpec Core => base.core.Core;
     }
 }

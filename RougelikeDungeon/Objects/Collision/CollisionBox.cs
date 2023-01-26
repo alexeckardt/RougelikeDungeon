@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RougelikeDungeon.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -124,8 +123,8 @@ namespace RougelikeDungeon.Objects.Collision
         public void Draw(SpriteBatch spriteBatch)
         {
             //Draw Behind All
-            spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
-            spriteBatch.Draw(GlobalTextures.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
 
         public CollisionBox GetCopy() => new CollisionBox(X, Y, Width, Height, OffsetX, OffsetY);

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace RougelikeDungeon.Guns.Bullets
 {
-    internal class BaseBullet : IBullet
+    internal class BaseBulletSpec : IBaseBulletSpec
     {
-        public BaseBullet() { }
+        public BaseBulletSpec() { }
 
         public float Speed => 10f;
 
@@ -18,8 +18,8 @@ namespace RougelikeDungeon.Guns.Bullets
 
         public float PenatrationForce => 10f;
 
-        public IBullet BulletSpawnOnDeath => null;
+        public IBaseBulletSpec BulletSpawnOnDeath => null;
 
-        public IBullet Core => this;
+        public IBaseBulletSpec Core => this;
     }
 }

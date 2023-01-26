@@ -6,17 +6,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.Utilities
+namespace RougelikeDungeon
 {
-    internal class GlobalTextures
+    internal class GameConstants
     {
         //Singleton
-        public static GlobalTextures instance;
-        public static GlobalTextures Instance
+        public static GameConstants instance;
+        public static GameConstants Instance
         {
             get
             {
-                if (instance == null) instance = new GlobalTextures();
+                if (instance == null) instance = new GameConstants();
                 return instance;
             }
         }
@@ -24,7 +24,13 @@ namespace RougelikeDungeon.Utilities
         //Vars
         public Texture2D Pixel;
 
-        private GlobalTextures() { }
+        public float ActionDepth = 0.5f;
+
+        public float BulletDepth = 0.2f;
+
+
+
+        private GameConstants() { }
 
         public void LoadContent(ContentManager Content)
         {

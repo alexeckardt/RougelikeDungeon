@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects.Collision;
-using RougelikeDungeon.Packets;
 using RougelikeDungeon.Utilities;
 using System;
 using System.Collections.Generic;
@@ -76,7 +75,7 @@ namespace RougelikeDungeon.Objects
         public override void Draw(SpriteBatch spriteBatch)
         {
             //Draw My Position
-            spriteBatch.Draw(GlobalTextures.Instance.Pixel, Position, Color.Aqua);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, Position, Color.Aqua);
 
             //Collision Box
             Collider.Draw(spriteBatch);

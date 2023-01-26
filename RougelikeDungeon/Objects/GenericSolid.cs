@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using RougelikeDungeon.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,7 +32,7 @@ namespace RougelikeDungeon.Objects
 
         public override void LoadContent(ContentManager content)
         {
-            Sprite = GlobalTextures.Instance.Pixel;
+            Sprite = GameConstants.Instance.Pixel;
             base.LoadContent(content);
         }
 

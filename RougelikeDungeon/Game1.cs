@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
-using RougelikeDungeon.Packets;
 using RougelikeDungeon.Utilities;
 using System.Collections.Generic;
 
@@ -103,7 +102,7 @@ namespace RougelikeDungeon
 
         public void LoadObjects()
         {
-            GlobalTextures.Instance.LoadContent(this.Content);
+            GameConstants.Instance.LoadContent(this.Content);
 
             foreach (GameObject obj in objects.AsList()) {
                 obj.Initalize();

@@ -7,7 +7,7 @@ using RougelikeDungeon.Objects;
 
 namespace RougelikeDungeon.Guns.Bullets
 {
-    internal interface IBullet
+    internal interface IBaseBulletSpec
     {
         public float Speed { get; }
 
@@ -17,8 +17,8 @@ namespace RougelikeDungeon.Guns.Bullets
 
         public float PenatrationForce { get; } //each hit enemy will lower this, wall will set to 0, at 0 it will break
 
-        public IBullet BulletSpawnOnDeath { get; }
+        public IBaseBulletSpec BulletSpawnOnDeath { get; }
 
-        public IBullet Core { get; }
+        public IBaseBulletSpec Core { get; }
     }
 }
