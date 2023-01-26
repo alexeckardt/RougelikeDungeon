@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RougelikeDungeon.Guns.Guns;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Bullets;
 using RougelikeDungeon.Objects.Guns;
@@ -16,26 +17,38 @@ namespace RougelikeDungeon.Guns
         Gun gun;
         int ShotsLeft;
 
-        DateTime lastShot;
-        DateTime reloadStarted;
-        DateTime pulloutStarted;
+        DateTime lastShot = DateTime.UtcNow;
+        DateTime reloadStarted = DateTime.UtcNow;
+        DateTime pulloutStarted = DateTime.UtcNow;
 
         //Known
-        public bool Reloading { get => (DateTime.Now - reloadStarted).Milliseconds <= Gun.ReloadMilliseconds; }
+        public bool Reloading 
+        { 
+            get 
+            {
+                var f = (DateTime.UtcNow - reloadStarted);
+                return f.TotalMilliseconds <= Gun.ReloadMilliseconds;
+            }
+        }
 
         public bool EmptyClip { get => ShotsLeft <= 0; }
 
-        public bool PullingOut { get => (DateTime.Now - pulloutStarted).Milliseconds <= Gun.PullOutMilliseconds; }
-
-        public bool Shootable
+        public bool PullingOut
         {
             get
             {
-                bool GunExists = Gun != null;
-                bool ShotCooldownFinished = (DateTime.Now - lastShot).Milliseconds >= Gun.MillisecondsBetweenShots;
-
-                return GunExists && !EmptyClip && !Reloading && !PullingOut && ShotCooldownFinished;
+                var f = (DateTime.UtcNow - pulloutStarted);
+                return f.TotalMilliseconds <= Gun.PullOutMilliseconds;
             }
+        }
+
+        public bool Shootable()
+        {
+            bool GunExists = Gun != null;
+            var timeSinceShot = (DateTime.UtcNow - lastShot);
+            bool shotCoolingDown = timeSinceShot.TotalMilliseconds <= Gun.MillisecondsBetweenShots;
+
+            return GunExists && !EmptyClip && !Reloading && !PullingOut && !shotCoolingDown;
         }
 
         //Get
@@ -49,6 +62,7 @@ namespace RougelikeDungeon.Guns
         public GunWrapper(Gun gun)
         {
             this.gun = gun;
+            ResetMagazine();
         }
 
         //------------------------------------------------
@@ -68,6 +82,13 @@ namespace RougelikeDungeon.Guns
             ShotsLeft = Gun.ClipSize;
         }
 
+        //--------------------------------------------------
+
+        public void BeginPullout()
+        {
+            pulloutStarted = DateTime.UtcNow;
+        }
+
         public void Shoot(GameObjects objects, Vector2 SpawnPosition, Vector2 ShootDirection)
         {
             int bulletsToShoot = Math.Min(ShotsLeft, Gun.BulletsPerShot);
@@ -85,13 +106,13 @@ namespace RougelikeDungeon.Guns
             }
 
             //Update
-            ShotsLeft -= bulletsToShoot;
+            //ShotsLeft -= bulletsToShoot;
             lastShot = DateTime.UtcNow;
         }
 
         public Bullet MakeBulletInstance()
         {
-            var spec = Gun.GetBulletSpec();
+            var spec = Gun.Bullet;
             var inst = (Bullet) spec.Core.GenerateInstance();
 
             //Set From Wrapper

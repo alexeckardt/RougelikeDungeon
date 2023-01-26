@@ -22,6 +22,10 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         public float MoveSlip = 25f;
         public float CollisionStep = 0.25f;
 
+        public float PreFireMilliseconds = 100f;
+        public DateTime lastClickAt;
+        
+
         public PlayerGuns Guns;
 
         //Empty Constructor
@@ -41,6 +45,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         public override void Initalize()
         {
             Guns = new PlayerGuns();
+            lastClickAt = DateTime.UtcNow;
 
             base.Initalize();
         }
@@ -177,12 +182,18 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             //Set Prefire Timer
             if (click)
             {
-                
+                lastClickAt = DateTime.UtcNow;
             }
 
             //
-            if (click && CurrentGunHolder.Shootable)
+            var timeSinceClick = (DateTime.UtcNow - lastClickAt).TotalMilliseconds;
+            var attemptFire = timeSinceClick <= PreFireMilliseconds;
+
+            if (attemptFire && CurrentGunHolder.Shootable())
             {
+                //Reset, Don't Attempt To Fire Again
+                lastClickAt = DateTime.UtcNow.AddMilliseconds(PreFireMilliseconds * 2);
+
                 //Get Information
                 Vector2 MousePos = Input.Instance.MousePositionCamera();
 
@@ -191,7 +202,6 @@ namespace RougelikeDungeon.Objects.PlayerObjects
 
                 //Figure Out Where To Spawn Bullet
                 Vector2 BulletSpawnPosition = Position + ShootDirection.Normalized()*CurrentGunHolder.Gun.BulletSpawnOffset;
-
     
                 //Shoot Gun, Side Effects
                 CurrentGunHolder.Shoot(objects, BulletSpawnPosition, ShootDirection);

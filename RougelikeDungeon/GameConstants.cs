@@ -29,7 +29,17 @@ namespace RougelikeDungeon
 
         public float BulletDepth = 0.2f;
 
-        public Color EnemyBulletColor = new Color(new Vector3(1, 0, 0));
+        public Color EnemyBulletColor = new Color(0xff0000);
+
+        public Color CommonRarityColor = new Color(0xffffffff);
+
+        public Color UnCommonRarityColor = new Color(0x20ff00);
+
+        public Color RareRarityColor = new Color(0x00f5ff);
+
+        public Color EpicRarityColor = new Color(0xff00ff);
+
+        public Color LegendaryRarityColor = new Color(0xffff00);
 
 
 

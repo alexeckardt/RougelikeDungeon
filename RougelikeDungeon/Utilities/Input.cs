@@ -30,7 +30,6 @@ namespace RougelikeDungeon.Utilities
                 }
 
                 //Update On Singleton Get
-                instance.Update();
                 return instance;
             }
         }

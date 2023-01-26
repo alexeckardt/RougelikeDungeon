@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Guns;
 using RougelikeDungeon.Guns.Bullets;
 using RougelikeDungeon.Guns.Bullets.Decorations;
@@ -10,45 +12,45 @@ using System.Threading.Tasks;
 
 namespace RougelikeDungeon.Objects.Guns
 {
-    internal class Gun
+    internal interface Gun
     {
         // Bullet Information
 
-        private IBulletSpec Bullet;
+        public IBulletSpec Bullet { get; }
 
-        public int BulletsPerShot;
+        public int BulletsPerShot { get; }
 
-        public int ClipSize;
+        public int ClipSize { get; }
 
         // Shooting
 
-        public GunFireStyle Style;
+        public GunFireStyle Style { get; }
 
-        public float MillisecondsBetweenShots;
+        public float MillisecondsBetweenShots { get; }
 
-        public float ReloadMilliseconds;
+        public float ReloadMilliseconds { get; }
 
         // Cool
 
-        public int ShotsLeftForCritical;
+        public int ShotsLeftForCritical { get; }
 
-        public float CriticalShotDamageMultiplier;
+        public float CriticalShotDamageMultiplier { get; }
 
         // Other Stats
 
-        public float PullOutMilliseconds;
+        public float PullOutMilliseconds { get; }
 
         //Visual
-        public Texture2D Sprite;
+        public Texture2D Sprite { get; }
 
-        public float BulletSpawnOffset = 5f;
+        public GunRarity Rarity { get; }
 
-        //
-        public IBulletSpec GetBulletSpec() => Bullet;
+        public Vector2 BulletSpawnOffset { get; }
+
 
         //Decorator = Bad
-        public void SetBulletSpec(IBulletSpec newSpec) {
-            Bullet = newSpec;
-        }
+        public void SetBulletSpec(IBulletSpec newSpec);
+
+        public void LoadContent(ContentManager content);
     }
 }

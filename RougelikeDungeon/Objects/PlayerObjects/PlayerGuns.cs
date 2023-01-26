@@ -1,4 +1,6 @@
 ﻿using RougelikeDungeon.Guns;
+using RougelikeDungeon.Guns.Guns;
+using RougelikeDungeon.Objects.Guns;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,17 +31,23 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             Guns = new List<GunWrapper>();
             GunSelected = 0;
 
-            //AddGun();
+            AddGun(new DefaultPistol());
         }
 
-        public void AddGun(GunWrapper newGun)
+        public void AddGun(Gun newGun)
         {
-            Guns.Add(newGun);
+            GunWrapper newWrapper = new GunWrapper(newGun);
+            Guns.Add(newWrapper);
+        }
+        
+        public void AddGun(GunWrapper newWrapper)
+        {
+            Guns.Add(newWrapper);
         }
 
-        public void DeleteGun(GunWrapper newGun)
+        public void DeleteGun(int i)
         {
-            Guns.Remove(newGun);
+            Guns.RemoveAt(i);
         }
 
         public void DeleteCurrentGun()

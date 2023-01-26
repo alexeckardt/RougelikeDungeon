@@ -54,6 +54,9 @@ namespace RougelikeDungeon
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            //Update
+            Input.Instance.Update();
+
             //Update Objects
             UpdateObjects(gameTime);
 
@@ -117,6 +120,10 @@ namespace RougelikeDungeon
 
         public void UpdateObjects(GameTime time)
         {
+            //
+            objects.AddEnqueuedObjects(this.Content);
+
+            //
             foreach (GameObject obj in objects.AsList())
             {
                 obj.Update(objects, time);
