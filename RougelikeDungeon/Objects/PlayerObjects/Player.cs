@@ -16,7 +16,7 @@ namespace RougelikeDungeon.Objects
     {
         //
         public Vector2 Velocity;
-        public float MoveSpeed = 64f;
+        public float MoveSpeed = 82f;
         public float MoveSlip = 25f;
         public float CollisionStep = 0.25f;
 
@@ -90,10 +90,10 @@ namespace RougelikeDungeon.Objects
             Input input = Input.Instance;
 
             //Update
-            var left = input.IsKeyDownInt(Keys.Left);
-            var right = input.IsKeyDownInt(Keys.Right);
-            var up = input.IsKeyDownInt(Keys.Up);
-            var down = input.IsKeyDownInt(Keys.Down);
+            var left = input.IsKeyDown(Keys.Left) || input.IsKeyDown(Keys.A) ? 1 : 0;
+            var right = input.IsKeyDown(Keys.Right) || input.IsKeyDown(Keys.D) ? 1 : 0;
+            var up = input.IsKeyDown(Keys.Up) || input.IsKeyDown(Keys.W) ? 1 : 0;
+            var down = input.IsKeyDown(Keys.Down) || input.IsKeyDown(Keys.S) ? 1 : 0;
 
             //Get an Input Direction
             return new Vector2(right - left, down - up);

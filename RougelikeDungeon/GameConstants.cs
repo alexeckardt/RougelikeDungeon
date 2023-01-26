@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace RougelikeDungeon
         public float ActionDepth = 0.5f;
 
         public float BulletDepth = 0.2f;
+
+        public Color EnemyBulletColor = new Color(new Vector3(1, 0, 0));
 
 
 

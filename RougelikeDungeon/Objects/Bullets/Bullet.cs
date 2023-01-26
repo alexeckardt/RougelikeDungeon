@@ -15,6 +15,7 @@ namespace RougelikeDungeon.Objects.Bullets
     {
 
         protected Texture2D OverlaySprite;
+        protected Vector2 FireDirection;
 
         public override void Initalize() 
         {

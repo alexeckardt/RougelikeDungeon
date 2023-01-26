@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
+using RougelikeDungeon.Objects.Bullets;
 using RougelikeDungeon.Utilities;
 using System.Collections.Generic;
 
@@ -26,7 +27,9 @@ namespace RougelikeDungeon
             Resolution.Init(ref _graphics);
             Resolution.SetVirtualResolution(320, 180); //Camera Screen Width
 
-            Resolution.SetResolution(960, 540, false); //Window Size
+            int scale = 5;
+
+            Resolution.SetResolution(320*scale, 180*scale, false); //Window Size
         }
 
         protected override void Initialize()
@@ -72,7 +75,7 @@ namespace RougelikeDungeon
             this._spriteBatch.Begin(
                     SpriteSortMode.BackToFront, 
                     BlendState.AlphaBlend, 
-                    SamplerState.PointWrap, 
+                    SamplerState.PointClamp, 
                     DepthStencilState.None, 
                     RasterizerState.CullNone, 
                     null, 
@@ -96,6 +99,7 @@ namespace RougelikeDungeon
             player = new Player(new Vector2(30, 30));
             objects.Add(player);
             objects.Add(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
+            objects.Add(new GenericBullet(new Vector2(12, 32)));
 
             LoadObjects();
         }

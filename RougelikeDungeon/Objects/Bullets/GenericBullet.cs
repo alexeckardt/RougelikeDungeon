@@ -13,6 +13,14 @@ namespace RougelikeDungeon.Objects.Bullets
 {
     internal class GenericBullet : Bullet
     {
+        public GenericBullet() { }
+
+        public GenericBullet(Vector2 Position)
+        {
+            this.Position = Position;
+            this.Tint = GameConstants.Instance.EnemyBulletColor;
+        }
+
         public override void Initalize() 
         {
             base.Initalize();
@@ -21,7 +29,7 @@ namespace RougelikeDungeon.Objects.Bullets
         public override void LoadContent(ContentManager content)
         {
             Sprite = content.Load<Texture2D>("bullet/basicbullet");
-            OverlaySprite = content.Load<Texture2D>("bullet/basicbullet");
+            OverlaySprite = content.Load<Texture2D>("bullet/basicbullet_overlay");
 
             Collider = new CollisionBox();
             Collider.Position = Position;
