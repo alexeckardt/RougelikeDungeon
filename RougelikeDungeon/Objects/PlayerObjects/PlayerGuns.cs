@@ -13,6 +13,9 @@ namespace RougelikeDungeon.Objects.PlayerObjects
 
         private int GunSelected;
 
+        private int Slot0 = 0;
+        private int Slot1 = 0;
+
         public GunWrapper CurrentGun 
         { 
             get 
@@ -44,6 +47,27 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             Guns.Remove(CurrentGun);
         }
 
+        public void SwitchGun()
+        {
+            if (GunSelected != Slot0)
+            {
+                SwitchGun(Slot0);
+            } else
+            {
+                SwitchGun(Slot1);
+            }
+        }
 
+        public void SwitchGun(int position)
+        {
+            //Switch
+            GunSelected = position;
+
+            //Update
+            if (CurrentGun.EmptyClip)
+            {
+                CurrentGun.BeginPullout();
+            }
+        }
     }
 }

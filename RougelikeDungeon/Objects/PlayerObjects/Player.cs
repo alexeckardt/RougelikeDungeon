@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using RougelikeDungeon.Guns;
 using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.Objects.Guns;
 using RougelikeDungeon.Utilities;
@@ -73,7 +74,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             //Add To Position
             Position += MoveVel;
 
-            TryShoot();
+            TryShoot(objects);
 
             //Update Base
             base.Update(objects, gameTime);
@@ -167,14 +168,33 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             return MoveVel;
         }
 
-        public void TryShoot()
+        public void TryShoot(GameObjects objects)
         {
 
             var click = Input.Instance.MouseLeftClicked();
+            GunWrapper CurrentGunHolder = Guns.CurrentGun;
 
+            //Set Prefire Timer
             if (click)
             {
+                
+            }
 
+            //
+            if (click && CurrentGunHolder.Shootable)
+            {
+                //Get Information
+                Vector2 MousePos = Input.Instance.MousePositionCamera();
+
+                Vector2 ShootDirection = Position - MousePos;
+
+
+                //Figure Out Where To Spawn Bullet
+                Vector2 BulletSpawnPosition = Position + ShootDirection.Normalized()*CurrentGunHolder.Gun.BulletSpawnOffset;
+
+    
+                //Shoot Gun, Side Effects
+                CurrentGunHolder.Shoot(objects, BulletSpawnPosition, ShootDirection);
             }
         }
     }

@@ -13,29 +13,57 @@ namespace RougelikeDungeon.Guns
     internal class GunWrapper
     {
         //
-        Gun Gun;
-
+        Gun gun;
         int ShotsLeft;
+
+        DateTime lastShot;
+        DateTime reloadStarted;
+        DateTime pulloutStarted;
+
+        //Known
+        public bool Reloading { get => (DateTime.Now - reloadStarted).Milliseconds <= Gun.ReloadMilliseconds; }
+
+        public bool EmptyClip { get => ShotsLeft <= 0; }
+
+        public bool PullingOut { get => (DateTime.Now - pulloutStarted).Milliseconds <= Gun.PullOutMilliseconds; }
 
         public bool Shootable
         {
             get
             {
-                bool MagEmpty = ShotsLeft <= 0;
                 bool GunExists = Gun != null;
+                bool ShotCooldownFinished = (DateTime.Now - lastShot).Milliseconds >= Gun.MillisecondsBetweenShots;
 
-                return GunExists && !MagEmpty;
+                return GunExists && !EmptyClip && !Reloading && !PullingOut && ShotCooldownFinished;
             }
+        }
+
+        //Get
+        public Gun Gun
+        {
+            get => gun;
         }
 
         public GunWrapper() { }
 
         public GunWrapper(Gun gun)
         {
-            Gun = gun;
+            this.gun = gun;
         }
 
-        public void ReloadMag()
+        //------------------------------------------------
+
+
+        //------------------------------------------------
+
+        public void BeginReload()
+        {
+            //Start Reload
+            reloadStarted = DateTime.UtcNow;
+        }
+
+        //
+        public void ResetMagazine()
         {
             ShotsLeft = Gun.ClipSize;
         }
@@ -55,6 +83,10 @@ namespace RougelikeDungeon.Guns
                 //Add Instance To World
                 objects.Add(newBullet);
             }
+
+            //Update
+            ShotsLeft -= bulletsToShoot;
+            lastShot = DateTime.UtcNow;
         }
 
         public Bullet MakeBulletInstance()

@@ -1,4 +1,5 @@
-﻿using RougelikeDungeon.Guns;
+﻿using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.Guns;
 using RougelikeDungeon.Guns.Bullets;
 using RougelikeDungeon.Guns.Bullets.Decorations;
 using System;
@@ -32,6 +33,15 @@ namespace RougelikeDungeon.Objects.Guns
         public int ShotsLeftForCritical;
 
         public float CriticalShotDamageMultiplier;
+
+        // Other Stats
+
+        public float PullOutMilliseconds;
+
+        //Visual
+        public Texture2D Sprite;
+
+        public float BulletSpawnOffset = 5f;
 
         //
         public IBulletSpec GetBulletSpec() => Bullet;
