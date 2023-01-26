@@ -11,7 +11,7 @@ namespace RougelikeDungeon.Guns.Bullets.Modifiers
     {
         private float SpeedMultiplier = 1f;
 
-        public BulletSpeedMultiplier(float multiAmount, IBaseBulletSpec core)
+        public BulletSpeedMultiplier(float multiAmount, IBulletSpec core)
         {
             SpeedMultiplier = multiAmount;
             base.core = core;
@@ -29,8 +29,8 @@ namespace RougelikeDungeon.Guns.Bullets.Modifiers
 
         public override float PenatrationForce => base.core.PenatrationForce;
 
-        public override IBaseBulletSpec BulletSpawnOnDeath => base.core.BulletSpawnOnDeath;
+        public override IBulletSpec BulletSpawnOnDeath => base.core.BulletSpawnOnDeath;
 
-        public override IBaseBulletSpec Core => base.core.Core;
+        public override IBulletSpec Core => base.core.Core;
     }
 }

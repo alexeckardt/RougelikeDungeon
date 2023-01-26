@@ -1,4 +1,5 @@
 ﻿using RougelikeDungeon.Guns.Bullets.Decorations;
+using RougelikeDungeon.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace RougelikeDungeon.Guns.Bullets.Modifiers
     {
         private float SpeedAmount = 0f;
 
-        public BulletSpeedAdder(float addAmount, IBaseBulletSpec core)
+        public BulletSpeedAdder(float addAmount, IBulletSpec core)
         {
             SpeedAmount = addAmount;
             base.core = core;
@@ -29,8 +30,8 @@ namespace RougelikeDungeon.Guns.Bullets.Modifiers
 
         public override float PenatrationForce => base.core.PenatrationForce;
 
-        public override IBaseBulletSpec BulletSpawnOnDeath => base.core.BulletSpawnOnDeath;
+        public override IBulletSpec BulletSpawnOnDeath => base.core.BulletSpawnOnDeath;
 
-        public override IBaseBulletSpec Core => base.core.Core;
+        public override IBulletSpec Core => base.core.Core;
     }
 }

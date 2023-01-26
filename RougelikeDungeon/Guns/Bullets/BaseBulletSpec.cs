@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RougelikeDungeon.Objects;
+using RougelikeDungeon.Objects.Bullets;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RougelikeDungeon.Guns.Bullets
 {
-    internal class BaseBulletSpec : IBaseBulletSpec
+    internal class BaseBulletSpec : IBulletSpec
     {
         public BaseBulletSpec() { }
 
@@ -18,8 +20,13 @@ namespace RougelikeDungeon.Guns.Bullets
 
         public float PenatrationForce => 10f;
 
-        public IBaseBulletSpec BulletSpawnOnDeath => null;
+        public IBulletSpec BulletSpawnOnDeath => null;
 
-        public IBaseBulletSpec Core => this;
+        public IBulletSpec Core => this;
+
+        public GameObject GenerateInstance()
+        {
+            return new GenericBullet();
+        }
     }
 }

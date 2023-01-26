@@ -13,9 +13,15 @@ namespace RougelikeDungeon.Objects.Bullets
 {
     internal class Bullet : GameObject
     {
-
         protected Texture2D OverlaySprite;
         protected Vector2 FireDirection;
+
+        public Vector2 MovementDirection;
+
+        public float Speed;
+        public float Range;
+        public float DamageAmount;
+        public float PenatrationForce;
 
         public override void Initalize() 
         {
@@ -41,6 +47,12 @@ namespace RougelikeDungeon.Objects.Bullets
 
             if (Sprite != null)
                 spriteBatch.Draw(OverlaySprite, Position, null, Tint, Rotation, SpriteOffset, Scale, SpriteEffects.None, depth);
+        }
+
+        public void SetFirePosition(Vector2 dir)
+        {
+            FireDirection = dir;
+            MovementDirection = dir;
         }
     }
 }

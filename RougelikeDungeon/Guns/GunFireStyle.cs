@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace RougelikeDungeon.Guns
 {
-    internal interface IGun
+    internal enum GunFireStyle
     {
+        Auto,
+        SemiAuto,
     }
 }

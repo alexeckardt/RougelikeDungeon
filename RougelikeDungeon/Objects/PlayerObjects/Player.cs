@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects.Collision;
+using RougelikeDungeon.Objects.Guns;
 using RougelikeDungeon.Utilities;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.Objects
+namespace RougelikeDungeon.Objects.PlayerObjects
 {
     internal class Player : GameObject
     {
@@ -19,6 +20,8 @@ namespace RougelikeDungeon.Objects
         public float MoveSpeed = 82f;
         public float MoveSlip = 25f;
         public float CollisionStep = 0.25f;
+
+        public PlayerGuns Guns;
 
         //Empty Constructor
         public Player() { }
@@ -36,6 +39,8 @@ namespace RougelikeDungeon.Objects
 
         public override void Initalize()
         {
+            Guns = new PlayerGuns();
+
             base.Initalize();
         }
 
@@ -67,6 +72,8 @@ namespace RougelikeDungeon.Objects
 
             //Add To Position
             Position += MoveVel;
+
+            TryShoot();
 
             //Update Base
             base.Update(objects, gameTime);
@@ -158,6 +165,17 @@ namespace RougelikeDungeon.Objects
             }
 
             return MoveVel;
+        }
+
+        public void TryShoot()
+        {
+
+            var click = Input.Instance.MouseLeftClicked();
+
+            if (click)
+            {
+
+            }
         }
     }
 }
