@@ -35,7 +35,7 @@ namespace RougelikeDungeon.Guns.Guns
 
         public GunFireStyle Style => GunFireStyle.SemiAuto;
 
-        public float MillisecondsBetweenShots => 300;
+        public float MillisecondsBetweenShots => 100;
 
         public float ReloadMilliseconds => 1000;
 

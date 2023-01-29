@@ -24,7 +24,6 @@ namespace RougelikeDungeon.Objects.PlayerObjects
 
         public float PreFireMilliseconds = 100f;
         public DateTime lastClickAt;
-        
 
         public PlayerGuns Guns;
 
@@ -102,9 +101,16 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             {
                 Vector2 MousePos = Input.Instance.MousePositionCamera();
                 Vector2 ShootDirection = (Position - MousePos).Normalized();
+
                 var rot = Rotation + ShootDirection.Angle();
 
-                spriteBatch.Draw(gun.Sprite, Position, null, GameConstants.Instance.GetRarityColour(gun.Rarity), rot, gun.SpriteOffset, Scale, SpriteEffects.None, Depth);
+                var gunScale = GetGunScaleVector(rot);
+                if (gunScale.X == -1)
+                {
+                    rot += (float)Math.PI;
+                }
+
+                spriteBatch.Draw(gun.Sprite, Position, null, GameConstants.Instance.GetRarityColour(gun.Rarity), rot, gun.SpriteOffset, gunScale, SpriteEffects.None, Depth);
             }
         }
 
@@ -203,19 +209,42 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             if (attemptFire && CurrentGunHolder.Shootable())
             {
                 //Reset, Don't Attempt To Fire Again
-                lastClickAt = DateTime.UtcNow.AddMilliseconds(PreFireMilliseconds * 2);
+                lastClickAt = DateTime.UtcNow.AddMilliseconds(PreFireMilliseconds * -2);
 
                 //Get Information
                 Vector2 MousePos = Input.Instance.MousePositionCamera();
                 Vector2 ShootDirection = (Position - MousePos).Normalized();
 
-
+                //ShootDirection* CurrentGunHolder.Gun.BulletSpawnOffset;
                 //Figure Out Where To Spawn Bullet
-                Vector2 BulletSpawnPosition = Position + ShootDirection.Normalized()*CurrentGunHolder.Gun.BulletSpawnOffset;
-    
+
+                var pointAngle = ShootDirection.Angle();
+                var gunScaleVec = GetGunScaleVector(pointAngle);
+
+                //Get Offset
+                var spawnOffsetOrgPosition = CurrentGunHolder.Gun.BulletSpawnOffset;
+                var gunZeroPosition = CurrentGunHolder.Gun.SpriteOffset;
+                var spawnOffsetPosition = spawnOffsetOrgPosition - gunZeroPosition;
+
+                //Rotate Vector
+                var c = Math.Cos(pointAngle);
+                var s = Math.Sin(pointAngle);
+
+                var xComponent = c * spawnOffsetPosition.X - s * spawnOffsetPosition.Y * gunScaleVec.X;
+                var yComponent = s * spawnOffsetPosition.X + c * spawnOffsetPosition.Y * gunScaleVec.X;
+                var finalOffset = new Vector2((float) xComponent, (float) yComponent);
+
+                Vector2 BulletSpawnPosition = Position + finalOffset;
+
                 //Shoot Gun, Side Effects
                 CurrentGunHolder.Shoot(objects, BulletSpawnPosition, ShootDirection);
             }
+        }
+
+        public Vector2 GetGunScaleVector(float radians)
+        {
+            var x = new Vector2((Math.Cos(radians) >= 0) ? 1 : -1, 1);
+            return x;
         }
     }
 }

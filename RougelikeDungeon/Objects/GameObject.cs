@@ -62,7 +62,7 @@ namespace RougelikeDungeon.Objects
             }
         }
 
-        private void SpriteCenteredOrigin()
+        protected void SetSpriteCenteredOrigin()
         {
             if (Sprite == null) return;
             SpriteOffset = new Vector2(Sprite.Width / 2, Sprite.Height / 2);

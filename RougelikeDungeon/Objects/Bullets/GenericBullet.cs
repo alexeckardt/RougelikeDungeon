@@ -34,6 +34,8 @@ namespace RougelikeDungeon.Objects.Bullets
             Collider = new CollisionBox();
             Collider.Position = Position;
             Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
+
+            SetSpriteCenteredOrigin();
         }
 
         public override void Update(GameObjects objects, GameTime gameTime)
