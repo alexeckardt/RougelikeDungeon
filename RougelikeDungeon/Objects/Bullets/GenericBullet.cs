@@ -33,13 +33,35 @@ namespace RougelikeDungeon.Objects.Bullets
 
             Collider = new CollisionBox();
             Collider.Position = Position;
-            Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
+            Collider.Size = new Vector2(Sprite.Width/2, Sprite.Height/2);
 
             SetSpriteCenteredOrigin();
         }
 
         public override void Update(GameObjects objects, GameTime gameTime)
         {
+            var flaggedToDestroy = false;
+            var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            //Move
+            Position += MovementDirection * Speed*time;
+            Collider.Position = Position;
+
+            //Out Of Range
+            if ((Position - SpawnPosition).Length() >= Range)
+            {
+                //Destroy Self
+                flaggedToDestroy = true;
+            }
+
+            var collidingSolid = objects.CheckSolidCollision((CollisionBox)Collider);
+            if (!flaggedToDestroy && collidingSolid != null)
+            {
+                flaggedToDestroy = true;
+            }
+
+            if (flaggedToDestroy) DestroySelf(objects);
+
             base.Update(objects, gameTime);
         }
 

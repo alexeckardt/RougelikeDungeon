@@ -103,7 +103,7 @@ namespace RougelikeDungeon.Guns
                 newBullet.SetFirePosition(ShootDirection);
 
                 //Add Instance To World
-                objects.Add(newBullet);
+                objects.AddObjects(newBullet);
             }
 
             //Update

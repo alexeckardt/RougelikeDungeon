@@ -25,12 +25,14 @@ namespace RougelikeDungeon
         {
             this.Objects  = new List<GameObject>();
             Collisions = new SolidCollisions();
+
             ToAdd = new Queue<GameObject>();
+            ToRemove = new Queue<GameObject>();
         }
 
         //Object Addition
 
-        public void Add(GameObject newObject)
+        public void AddObjects(GameObject newObject)
         {
             ToAdd.Enqueue(newObject);
 
@@ -64,7 +66,7 @@ namespace RougelikeDungeon
         public Solid CheckSolidPosition(Vector2 input) => Collisions.CheckSolidCollision(input);
 
         //Remove
-        public void Remove(GameObject obj)
+        public void RemoveObjects(GameObject obj)
         {
             ToRemove.Enqueue(obj);
         }

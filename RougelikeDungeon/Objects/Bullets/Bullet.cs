@@ -53,8 +53,9 @@ namespace RougelikeDungeon.Objects.Bullets
 
         public void SetFirePosition(Vector2 dir)
         {
-            FireDirection = dir;
-            MovementDirection = dir;
+            var d = dir.Normalized();
+            FireDirection = d;
+            MovementDirection = d;
         }
     }
 }

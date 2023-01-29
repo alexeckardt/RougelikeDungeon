@@ -237,7 +237,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
                 Vector2 BulletSpawnPosition = Position + finalOffset;
 
                 //Shoot Gun, Side Effects
-                CurrentGunHolder.Shoot(objects, BulletSpawnPosition, ShootDirection);
+                CurrentGunHolder.Shoot(objects, BulletSpawnPosition, MousePos - Position);
             }
         }
 

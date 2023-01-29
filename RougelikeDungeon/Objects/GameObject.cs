@@ -84,7 +84,7 @@ namespace RougelikeDungeon.Objects
             if (MarkedToRemove) return;
 
             //Remove
-            objects.Remove(this);
+            objects.RemoveObjects(this);
             MarkedToRemove = true;
         }
 

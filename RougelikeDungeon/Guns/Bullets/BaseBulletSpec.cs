@@ -12,7 +12,7 @@ namespace RougelikeDungeon.Guns.Bullets
     {
         public BaseBulletSpec() { }
 
-        public float Speed => 10f;
+        public float Speed => 250f;
 
         public float Range => 100f;
 
