@@ -15,7 +15,10 @@ namespace RougelikeDungeon.Objects
         protected Vector2 SpriteOffset = Vector2.Zero; //generally should be constant
 
         //Visual
+        public Vector2 SpawnPosition = Vector2.Zero;
         public Vector2 Position = Vector2.Zero;
+        public Vector2 LastPosition = Vector2.Zero;
+
         public Color Tint = Color.White;
         public float Scale = 1.0f;
         public float Rotation = 0f;
@@ -23,13 +26,17 @@ namespace RougelikeDungeon.Objects
         //Game Object
         public float Depth = 0.5f;
         public bool Active = true;
+        public bool MarkedToRemove = false;
 
         //Collision
         public ICollideable Collider;
 
         public GameObject() { }
 
-        public virtual void Initalize() { }
+        public virtual void Initalize() 
+        {
+            SpawnPosition = Position;
+        }
 
         public virtual void LoadContent(ContentManager content) 
         {
@@ -51,6 +58,9 @@ namespace RougelikeDungeon.Objects
             //Update My Collision Box's Position
             Collider.Position = Position;
             Collider.Offset = SpriteOffset;
+
+            //
+            LastPosition = Position;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch) {
@@ -67,5 +77,18 @@ namespace RougelikeDungeon.Objects
             if (Sprite == null) return;
             SpriteOffset = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
         }
+
+        //Set To Destroy
+        public virtual void Remove(GameObjects objects)
+        {
+            if (MarkedToRemove) return;
+
+            //Remove
+            objects.Remove(this);
+            MarkedToRemove = true;
+        }
+
+        //Clean Up Resources -- Called upon Remoevall
+        public virtual void CleanUp() { }
     }
 }

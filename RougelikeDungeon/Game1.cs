@@ -136,6 +136,8 @@ namespace RougelikeDungeon
             {
                 obj.Update(objects, time);
             }
+
+            objects.ClearRemovedObjects();
         }
 
         public void DrawObjects()
