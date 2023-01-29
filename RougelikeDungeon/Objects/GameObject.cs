@@ -79,7 +79,7 @@ namespace RougelikeDungeon.Objects
         }
 
         //Set To Destroy
-        public virtual void Remove(GameObjects objects)
+        public virtual void DestroySelf(GameObjects objects)
         {
             if (MarkedToRemove) return;
 
