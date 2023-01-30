@@ -62,6 +62,9 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
             Collider.Offset = SpriteOffset;
 
+            //Start
+            Collider.Enable();
+
             base.LoadContent(content);
         }
 

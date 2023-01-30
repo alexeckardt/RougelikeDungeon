@@ -51,6 +51,7 @@ namespace RougelikeDungeon.Objects.Enemy
             Collider.Position = Position;
             Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
             Collider.Offset = SpriteOffset;
+            Collider.Enable();
 
             base.LoadContent(content);
         }

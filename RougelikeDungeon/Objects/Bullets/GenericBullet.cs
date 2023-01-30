@@ -35,6 +35,7 @@ namespace RougelikeDungeon.Objects.Bullets
             Collider.Position = Position;
             Collider.Size = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
             Collider.Offset = new Vector2(2, 2);
+            Collider.Enable();
 
             SetSpriteCenteredOrigin();
         }
