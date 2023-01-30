@@ -25,6 +25,8 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         public float PreFireMilliseconds = 100f;
         public DateTime lastClickAt;
 
+        public float GunPossibleAngles = (float) (10 * Math.PI / 180); //10-degrees
+
         public PlayerGuns Guns;
 
         //Empty Constructor

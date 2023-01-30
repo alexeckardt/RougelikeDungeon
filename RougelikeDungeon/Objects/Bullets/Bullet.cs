@@ -25,6 +25,7 @@ namespace RougelikeDungeon.Objects.Bullets
 
         public override void Initalize() 
         {
+            Depth = .4f; //Above Player
             base.Initalize();
         }
 
