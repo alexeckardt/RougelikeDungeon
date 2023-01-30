@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Bullets;
+using RougelikeDungeon.Objects.Enemy;
 using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Utilities;
 using System.Collections.Generic;
@@ -112,6 +113,7 @@ namespace RougelikeDungeon
             objects.AddObjects(player);
             objects.AddObjects(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
             objects.AddObjects(new GenericBullet(new Vector2(12, 32)));
+            objects.AddObjects(new Enemy(new Vector2(50, 40)));
 
             LoadObjects();
         }
