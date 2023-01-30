@@ -48,7 +48,10 @@ namespace RougelikeDungeon.Objects.Bullets
             if (Sprite != null)
                 spriteBatch.Draw(OverlaySprite, Position, null, Tint, Rotation, SpriteOffset, Scale, SpriteEffects.None, depth);
 
-            spriteBatch.Draw(GameConstants.Instance.Pixel, Position, null, Tint, Rotation, Vector2.Zero, 1f, SpriteEffects.None, depth);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, Position, Color.Aqua);
+
+            //Collision Box
+            Collider.Draw(spriteBatch);
         }
 
         public void SetFirePosition(Vector2 dir)

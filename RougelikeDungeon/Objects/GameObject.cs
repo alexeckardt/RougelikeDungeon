@@ -57,7 +57,6 @@ namespace RougelikeDungeon.Objects
         {
             //Update My Collision Box's Position
             Collider.Position = Position;
-            Collider.Offset = SpriteOffset;
 
             //
             LastPosition = Position;

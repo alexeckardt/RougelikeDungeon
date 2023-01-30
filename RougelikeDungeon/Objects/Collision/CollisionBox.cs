@@ -123,7 +123,7 @@ namespace RougelikeDungeon.Objects.Collision
         public void Draw(SpriteBatch spriteBatch)
         {
             //Draw Behind All
-            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
             spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
 

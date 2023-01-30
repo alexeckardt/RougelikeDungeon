@@ -33,7 +33,8 @@ namespace RougelikeDungeon.Objects.Bullets
 
             Collider = new CollisionBox();
             Collider.Position = Position;
-            Collider.Size = new Vector2(Sprite.Width/2, Sprite.Height/2);
+            Collider.Size = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
+            Collider.Offset = new Vector2(2, 2);
 
             SetSpriteCenteredOrigin();
         }
@@ -45,7 +46,7 @@ namespace RougelikeDungeon.Objects.Bullets
 
             //Move
             Position += MovementDirection * Speed*time;
-            Collider.Position = Position;
+            //Collider Lags Behind
 
             //Out Of Range
             if ((Position - SpawnPosition).Length() >= Range)
