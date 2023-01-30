@@ -32,29 +32,36 @@ namespace RougelikeDungeon.Objects.Collision
         //
         //Solid Collision Check
 
-        public Solid CheckSolidCollision(CollisionBox input) => CheckSolidCollision(input, Vector2.Zero);
+        public Solid CheckSolidCollision(ICollideable input) => CheckSolidCollision(input, Vector2.Zero);
 
-        public Solid CheckSolidCollision(CollisionBox input, Vector2 CheckPositionOffset)
+        public Solid CheckSolidCollision(ICollideable input, Vector2 CheckPositionOffset)
         {
-            var inputCopy = input.GetCopy();
+            if (!input.IsEnabled()) return null;
 
             //Move TestBox As Described
             if (CheckPositionOffset != Vector2.Zero)
-            {
-                inputCopy.Position += CheckPositionOffset;
-            }
+                input.Position += CheckPositionOffset;
+
+            Solid foundSolid = null;
 
             //Test for Collision (Bad, O(n))
             foreach (Solid solid in SolidObjects)
             {
-                if (solid.Active)
+                if (!solid.Active) continue;
+                
+                if (solid.Collider.Intersects(input))
                 {
-                    if (solid.Collider.Intersects(inputCopy))
-                        return solid;
+                    foundSolid = solid;
+                    break;
                 }
             }
 
-            return null;
+            //Return Collider
+            if (CheckPositionOffset != Vector2.Zero)
+                input.Position -= CheckPositionOffset;
+
+            //Return
+            return foundSolid;
         }
 
         public Solid CheckSolidCollision(Vector2 input)

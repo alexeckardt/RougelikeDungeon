@@ -53,7 +53,7 @@ namespace RougelikeDungeon.Objects
             }
         }
 
-        public virtual void Update(GameObjects objects, GameTime gameTime) 
+        public virtual void Update(ObjectHandler objects, GameTime gameTime) 
         {
             //Update My Collision Box's Position
             Collider.Position = Position;
@@ -78,12 +78,12 @@ namespace RougelikeDungeon.Objects
         }
 
         //Set To Destroy
-        public virtual void DestroySelf(GameObjects objects)
+        public virtual void DestroySelf(ObjectHandler objects)
         {
             if (MarkedToRemove) return;
 
             //Remove
-            objects.RemoveObjects(this);
+            objects.RemoveObject(this);
             MarkedToRemove = true;
         }
 

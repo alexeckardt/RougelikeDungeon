@@ -90,7 +90,7 @@ namespace RougelikeDungeon.Guns
             pulloutStarted = DateTime.UtcNow;
         }
 
-        public void Shoot(GameObjects objects, Vector2 SpawnPosition, Vector2 ShootDirection)
+        public void Shoot(ObjectHandler objects, Vector2 SpawnPosition, Vector2 ShootDirection)
         {
             int bulletsToShoot = Math.Min(ShotsLeft, Gun.BulletsPerShot);
 
@@ -103,7 +103,7 @@ namespace RougelikeDungeon.Guns
                 newBullet.SetFirePosition(ShootDirection);
 
                 //Add Instance To World
-                objects.AddObjects(newBullet);
+                objects.AddObject(newBullet);
             }
 
             //Update

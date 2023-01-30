@@ -34,7 +34,7 @@ namespace RougelikeDungeon.Objects.Bullets
             base.LoadContent(content);
         }
 
-        public override void Update(GameObjects objects, GameTime gameTime)
+        public override void Update(ObjectHandler objects, GameTime gameTime)
         {
             base.Update(objects, gameTime);
         }

@@ -23,11 +23,13 @@ namespace RougelikeDungeon.Objects
         {
             Collider = new CollisionBox(StartPosition, TilesScale.X*8, TilesScale.Y*8);
             Position = Collider.Position; //Move to Correct Position
+
         }
 
         public override void Initalize()
         {
             base.Initalize();
+            Collider.Enable();
         }
 
         public override void LoadContent(ContentManager content)
@@ -36,7 +38,7 @@ namespace RougelikeDungeon.Objects
             base.LoadContent(content);
         }
 
-        public override void Update(GameObjects objects, GameTime gameTime)
+        public override void Update(ObjectHandler objects, GameTime gameTime)
         {
             base.Update(objects, gameTime);
         }

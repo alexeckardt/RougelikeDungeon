@@ -39,14 +39,10 @@ namespace RougelikeDungeon.Objects.Bullets
             SetSpriteCenteredOrigin();
         }
 
-        public override void Update(GameObjects objects, GameTime gameTime)
+        public override void Update(ObjectHandler objects, GameTime gameTime)
         {
             var flaggedToDestroy = false;
             var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            //Move
-            Position += MovementDirection * Speed*time;
-            //Collider Lags Behind
 
             //Out Of Range
             if ((Position - SpawnPosition).Length() >= Range)
@@ -61,7 +57,15 @@ namespace RougelikeDungeon.Objects.Bullets
                 flaggedToDestroy = true;
             }
 
-            if (flaggedToDestroy) DestroySelf(objects);
+            //Exit
+            if (flaggedToDestroy)
+            {
+                DestroySelf(objects);
+                return;
+            }
+
+            //Move
+            Position += MovementDirection * Speed * time;
 
             base.Update(objects, gameTime);
         }

@@ -10,6 +10,8 @@ namespace RougelikeDungeon.Objects.Collision
 {
     internal class CollisionBox : ICollideable
     {
+        private bool Enabled = false;
+
         private float X;
         private float Y;
         private float Width;
@@ -97,11 +99,17 @@ namespace RougelikeDungeon.Objects.Collision
             Size = new Vector2(width, height);
         }
 
+        private void AddReference()
+        {
+            ObjectHandler.Instance.AddCollideableReference(this);
+        }
 
         //Methods
 
-        public bool Intersects(CollisionBox other)
+        public bool Intersects(ICollideable other)
         {
+            if (!Enabled) return false;
+
             if (other.Left < Right && Left < other.Right && other.Top < Bottom)
             {
                 return Top < other.Bottom;
@@ -112,6 +120,8 @@ namespace RougelikeDungeon.Objects.Collision
 
         public bool Contains(Vector2 point)
         {
+            if (!Enabled) return false;
+
             if (X <= point.X && point.X <= X + Width && Y <= point.Y)
             {
                 return point.Y <= Y + Height;
@@ -122,11 +132,28 @@ namespace RougelikeDungeon.Objects.Collision
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            if (!Enabled) return;
+
             //Draw Behind All
             spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
             spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
         }
 
         public CollisionBox GetCopy() => new CollisionBox(X, Y, Width, Height, OffsetX, OffsetY);
+
+        public void Enable()
+        {
+            if (Enabled) return;
+
+            MarkEnabled();
+            AddReference();
+        }
+
+        public void MarkEnabled()
+        {
+            Enabled = true;
+        }
+
+        public bool IsEnabled() => Enabled;
     }
 }

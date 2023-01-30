@@ -55,7 +55,7 @@ namespace RougelikeDungeon.Objects.Enemy
             base.LoadContent(content);
         }
 
-        public override void Update(GameObjects objects, GameTime gameTime)
+        public override void Update(ObjectHandler objects, GameTime gameTime)
         {
             var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -81,7 +81,7 @@ namespace RougelikeDungeon.Objects.Enemy
             base.Draw(spriteBatch);
         }
 
-        private Vector2 DoCollision(Vector2 MoveVel, GameObjects objects)
+        private Vector2 DoCollision(Vector2 MoveVel, ObjectHandler objects)
         {
             Solid collider = objects.CheckSolidCollision((CollisionBox)Collider, MoveVel);
             if (collider != null) //Collision Hit

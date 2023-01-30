@@ -15,7 +15,8 @@ namespace RougelikeDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        GameObjects objects;
+        //Have the REAL Version (Not the Interface)
+        ObjectHandler objects;
         Player player;
         Camera camera;
 
@@ -36,7 +37,7 @@ namespace RougelikeDungeon
 
         protected override void Initialize()
         {
-            objects = new GameObjects();
+            objects = (ObjectHandler) ObjectHandler.Instance;
             camera = Camera.Instance;
 
             base.Initialize();
@@ -110,10 +111,10 @@ namespace RougelikeDungeon
         public void LoadLevel()
         {
             player = new Player(new Vector2(30, 30));
-            objects.AddObjects(player);
-            objects.AddObjects(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
-            objects.AddObjects(new GenericBullet(new Vector2(12, 32)));
-            objects.AddObjects(new Enemy(new Vector2(50, 40)));
+            objects.AddObject(player);
+            objects.AddObject(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
+            objects.AddObject(new GenericBullet(new Vector2(12, 32)));
+            objects.AddObject(new Enemy(new Vector2(50, 40)));
 
             LoadObjects();
         }

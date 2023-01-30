@@ -16,7 +16,7 @@ namespace RougelikeDungeon.Objects
 
         public void LoadContent(ContentManager content);
 
-        public void Update(GameObjects objects, GameTime gameTime);
+        public void Update(ObjectHandler objects, GameTime gameTime);
 
         public void Draw(SpriteBatch spriteBatch);
     }

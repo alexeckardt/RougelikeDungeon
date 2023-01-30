@@ -16,7 +16,7 @@ namespace RougelikeDungeon.Objects.Collision
 
         public Vector2 Offset { get; set; }
 
-        public bool Intersects(CollisionBox other);
+        public bool Intersects(ICollideable other);
 
         public bool Contains(Vector2 point);
 
@@ -26,5 +26,9 @@ namespace RougelikeDungeon.Objects.Collision
         public float Top { get; }
         public float Right { get; }
         public float Bottom { get; }
+
+        public void Enable();
+        public void MarkEnabled();
+        public bool IsEnabled();
     }
 }

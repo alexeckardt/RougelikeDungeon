@@ -13,6 +13,7 @@ namespace RougelikeDungeon.Objects.Collision
     {
         readonly List<ICollideable> Collideables;
 
+        protected bool Enabled = false;
         private float masterX;
         private float masterY;
         private float masterWidth;
@@ -20,8 +21,8 @@ namespace RougelikeDungeon.Objects.Collision
         private float masterXoffset;
         private float masterYoffset;
 
-        public Vector2 Position 
-        { 
+        public Vector2 Position
+        {
             get => new Vector2(masterX, masterY);
             set
             {
@@ -50,8 +51,8 @@ namespace RougelikeDungeon.Objects.Collision
         public float Bottom => throw new NotImplementedException();
 
 
-        public MultiCollisions() 
-        { 
+        public MultiCollisions()
+        {
             Collideables = new List<ICollideable>();
         }
 
@@ -74,7 +75,7 @@ namespace RougelikeDungeon.Objects.Collision
             }
         }
 
-        public bool Intersects(CollisionBox other)
+        public bool Intersects(ICollideable other)
         {
             foreach (ICollideable collision in Collideables)
             {
@@ -97,5 +98,31 @@ namespace RougelikeDungeon.Objects.Collision
         {
             Collideables.Remove(collider);
         }
+
+        public void Enable()
+        {
+            if (Enabled) return;
+
+            MarkEnabled();
+            AddReference();
+
+            foreach (ICollideable collision in Collideables)
+            {
+                collision.MarkEnabled();
+            }
+        }
+
+        public void MarkEnabled()
+        {
+            //Mark
+            Enabled = true;
+        }
+
+        private void AddReference()
+        {
+            ObjectHandler.Instance.AddCollideableReference(this);
+        }
+
+        public bool IsEnabled() => Enabled;
     }
 }
