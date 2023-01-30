@@ -21,5 +21,6 @@ namespace RougelikeDungeon
         public void AddCollideableReference(ICollideable reference);
 
         public ICollideable CheckCollision(ICollideable input);
+        public ICollideable CheckCollisionWith(ICollideable input, Type type);
     }
 }

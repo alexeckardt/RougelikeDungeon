@@ -14,6 +14,8 @@ namespace RougelikeDungeon.Objects.Collision
         readonly List<ICollideable> Collideables;
 
         protected bool Enabled = false;
+        private Type creatorType = null;
+
         private float masterX;
         private float masterY;
         private float masterWidth;
@@ -50,6 +52,7 @@ namespace RougelikeDungeon.Objects.Collision
 
         public float Bottom => throw new NotImplementedException();
 
+        public Type CreatorType { get => creatorType; set => creatorType = value; }
 
         public MultiCollisions()
         {
@@ -99,7 +102,7 @@ namespace RougelikeDungeon.Objects.Collision
             Collideables.Remove(collider);
         }
 
-        public void Enable()
+        public void Enable(IGameObject creator)
         {
             if (Enabled) return;
 
@@ -110,6 +113,8 @@ namespace RougelikeDungeon.Objects.Collision
             {
                 collision.MarkEnabled();
             }
+
+            CreatorType = creator.GetType();
         }
 
         public void MarkEnabled()

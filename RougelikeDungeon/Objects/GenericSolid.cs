@@ -29,7 +29,7 @@ namespace RougelikeDungeon.Objects
         public override void Initalize()
         {
             base.Initalize();
-            Collider.Enable();
+            Collider.Enable(this);
         }
 
         public override void LoadContent(ContentManager content)

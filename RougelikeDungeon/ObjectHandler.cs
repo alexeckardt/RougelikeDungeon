@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
@@ -121,6 +122,28 @@ namespace RougelikeDungeon
                 if (hitbox.Intersects(input))
                 {
                     return hitbox;
+                }
+            }
+
+            return null;
+        }
+
+        public ICollideable CheckCollisionWith(ICollideable input, Type type)
+        {
+            //To Remove
+            Stack<ICollideable> toRemove = new();
+
+            //Look
+            foreach (ICollideable hitbox in Collidables)
+            {
+                //Check if It's what i'm searching for
+                if (hitbox.CreatorType.IsAssignableFrom(type))
+                {
+                    //Check
+                    if (hitbox.Intersects(input)) //maybe switch these to increase performace? idk
+                    {
+                        return hitbox;
+                    }
                 }
             }
 

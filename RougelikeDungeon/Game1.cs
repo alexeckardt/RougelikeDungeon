@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Bullets;
-using RougelikeDungeon.Objects.Enemy;
+using RougelikeDungeon.Objects.EnemyObjects;
 using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Utilities;
 using System.Collections.Generic;

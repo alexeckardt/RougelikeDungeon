@@ -13,7 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.Objects.Enemy
+namespace RougelikeDungeon.Objects.EnemyObjects
 {
     internal class Enemy : GameObject
     {
@@ -51,7 +51,7 @@ namespace RougelikeDungeon.Objects.Enemy
             Collider.Position = Position;
             Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
             Collider.Offset = SpriteOffset;
-            Collider.Enable();
+            Collider.Enable(this);
 
             base.LoadContent(content);
         }

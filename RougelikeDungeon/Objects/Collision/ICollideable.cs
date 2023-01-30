@@ -27,8 +27,10 @@ namespace RougelikeDungeon.Objects.Collision
         public float Right { get; }
         public float Bottom { get; }
 
-        public void Enable();
+        public void Enable(IGameObject creator);
         public void MarkEnabled();
         public bool IsEnabled();
+
+        public Type CreatorType { get; set; }
     }
 }

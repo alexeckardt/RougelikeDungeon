@@ -8,6 +8,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using RougelikeDungeon.Guns.Bullets;
 using RougelikeDungeon.Objects.Collision;
+using System.ComponentModel.DataAnnotations;
+using RougelikeDungeon.Objects.PlayerObjects;
+using RougelikeDungeon.Objects.EnemyObjects;
 
 namespace RougelikeDungeon.Objects.Bullets
 {
@@ -35,7 +38,7 @@ namespace RougelikeDungeon.Objects.Bullets
             Collider.Position = Position;
             Collider.Size = new Vector2(Sprite.Width / 2, Sprite.Height / 2);
             Collider.Offset = new Vector2(2, 2);
-            Collider.Enable();
+            Collider.Enable(this);
 
             SetSpriteCenteredOrigin();
         }
@@ -52,8 +55,16 @@ namespace RougelikeDungeon.Objects.Bullets
                 flaggedToDestroy = true;
             }
 
+            //Hit Solid
             var collidingSolid = objects.CheckSolidCollision((CollisionBox)Collider);
             if (!flaggedToDestroy && collidingSolid != null)
+            {
+                flaggedToDestroy = true;
+            }
+
+            //Check Collision Of Enemy
+            var collidedWith = objects.CheckCollisionWith(Collider, typeof(Enemy));
+            if (collidedWith != null)
             {
                 flaggedToDestroy = true;
             }
@@ -68,6 +79,7 @@ namespace RougelikeDungeon.Objects.Bullets
             //Move
             Position += MovementDirection * Speed * time;
 
+            //Update
             base.Update(objects, gameTime);
         }
 

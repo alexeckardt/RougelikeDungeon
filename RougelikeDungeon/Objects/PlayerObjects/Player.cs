@@ -63,7 +63,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             Collider.Offset = SpriteOffset;
 
             //Start
-            Collider.Enable();
+            Collider.Enable(this);
 
             base.LoadContent(content);
         }

@@ -11,6 +11,7 @@ namespace RougelikeDungeon.Objects.Collision
     internal class CollisionBox : ICollideable
     {
         private bool Enabled = false;
+        private Type creatorType = null;
 
         private float X;
         private float Y;
@@ -63,6 +64,8 @@ namespace RougelikeDungeon.Objects.Collision
         }
 
         public Vector2 Center => new Vector2(X + Width / 2, Y + Height / 2);
+
+        public Type CreatorType { get => creatorType; set => creatorType = value; }
 
         //Constructors
 
@@ -141,9 +144,11 @@ namespace RougelikeDungeon.Objects.Collision
 
         public CollisionBox GetCopy() => new CollisionBox(X, Y, Width, Height, OffsetX, OffsetY);
 
-        public void Enable()
+        public void Enable(IGameObject creator)
         {
             if (Enabled) return;
+
+            CreatorType = creator.GetType();
 
             MarkEnabled();
             AddReference();
