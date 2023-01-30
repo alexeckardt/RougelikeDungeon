@@ -23,6 +23,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         public float CollisionStep = 0.25f;
 
         public float PreFireMilliseconds = 100f;
+        public float GunDepth = 0f;
         public DateTime lastClickAt;
 
         public float GunPossibleAngles = (float) (10 * Math.PI / 180); //10-degrees
@@ -47,6 +48,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
         {
             Guns = new PlayerGuns();
             lastClickAt = DateTime.UtcNow;
+            GunDepth = Depth - 1 / 1000f;
 
             base.Initalize();
         }
@@ -115,7 +117,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
                     rot += (float)Math.PI;
                 }
 
-                spriteBatch.Draw(gun.Sprite, Position, null, GameConstants.Instance.GetRarityColour(gun.Rarity), rot, gun.SpriteOffset, gunScale, SpriteEffects.None, Depth);
+                spriteBatch.Draw(gun.Sprite, Position, null, GameConstants.Instance.GetRarityColour(gun.Rarity), rot, gun.SpriteOffset, gunScale, SpriteEffects.None, GunDepth);
             }
         }
 
