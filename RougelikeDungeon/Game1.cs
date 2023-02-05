@@ -6,6 +6,7 @@ using RougelikeDungeon.Objects.Bullets;
 using RougelikeDungeon.Objects.EnemyObjects;
 using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Utilities;
+using RougelikeDungeon.World;
 using System.Collections.Generic;
 
 namespace RougelikeDungeon
@@ -19,6 +20,8 @@ namespace RougelikeDungeon
         ObjectHandler objects;
         Player player;
         Camera camera;
+
+        LevelData level;
 
         public Game1()
         {
@@ -39,6 +42,11 @@ namespace RougelikeDungeon
         {
             objects = (ObjectHandler) ObjectHandler.Instance;
             camera = Camera.Instance;
+
+            level = new LevelData();
+
+            //Pregenerate chunks
+            level.DecideChunksActive(Vector2.Zero);
 
             base.Initialize();
         }
@@ -98,6 +106,8 @@ namespace RougelikeDungeon
 
                 //Draw
                 DrawObjects();
+
+                level.DrawActiveChunks(_spriteBatch);
 
             //End
             this._spriteBatch.End();
