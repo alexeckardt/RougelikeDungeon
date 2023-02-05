@@ -1,8 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -45,13 +48,41 @@ namespace RougelikeDungeon.World
             Chunks.ActivateAllChunks(chunkPlayerIn, new Vector2(ChunksLoadHorizontal, ChunksLoadVertical));
         }
 
-        public void DrawActiveChunks(SpriteBatch spriteBatch)
+        //
+        // Instance Handeling
+        //
+
+        public void AddObject(GameObject obj)
         {
+            objects.AddObject(obj);
+        }
+
+        public void LoadObjects(ContentManager content)
+        {
+            objects.LoadObjects(content);
+
+            //Load Chunks
+            Chunks.LoadActiveChunks(content);
+        }
+
+        public void UpdateObjects(ContentManager content, GameTime time)
+        {
+            objects.UpdateObjects(content, time);
+
+            //Update Chunk Instances
+            Chunks.UpdateActiveChunks(content, time);
+        }
+
+        public void DrawObjects(SpriteBatch spriteBatch)
+        {
+            objects.DrawObjects(spriteBatch);
+
+            //Update Chunk Instances
             Chunks.DrawActiveChunks(spriteBatch);
         }
 
         //
-        //
+        // Generation
         //
 
         public void GenerateWorld()

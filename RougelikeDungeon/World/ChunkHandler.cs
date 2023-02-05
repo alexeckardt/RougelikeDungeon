@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections;
@@ -43,6 +44,7 @@ namespace RougelikeDungeon.World
 
         //
         //
+        // Active Chunks
 
         public void ActivateAllChunks() { } //bad
 
@@ -66,6 +68,34 @@ namespace RougelikeDungeon.World
         }
 
         //
+        // Instance
+        //
+        public void LoadActiveChunks(ContentManager content)
+        {
+            foreach (Vector2 ids in ActiveChunkId)
+            {
+                Chunk activeChunk = GetChunk(ids);
+
+                if (!activeChunk.IsLoaded)
+                    activeChunk.LoadChunkInstances(content);
+            }
+        }
+
+        public void UpdateActiveChunks(ContentManager content, GameTime time)
+        {
+            foreach (Vector2 ids in ActiveChunkId)
+            {
+                Chunk activeChunk = GetChunk(ids);
+
+                if (!activeChunk.IsLoaded)
+                    activeChunk.LoadChunkInstances(content);
+
+                //Update
+                activeChunk.UpdateChunkInstances(content, time);
+            }
+        }
+
+        //
         // Drawing
         //
         public void DrawActiveChunks(SpriteBatch spriteBatch)
@@ -75,7 +105,7 @@ namespace RougelikeDungeon.World
                 Chunk chunkDrawing = GetChunk(chunkId);
 
                 chunkDrawing.DrawBorder(spriteBatch);
-                //chunkDrawing.DrawTiles();
+                chunkDrawing.Draw(spriteBatch, new TileMap(8)); //replace with the tileset
             }
         }
 

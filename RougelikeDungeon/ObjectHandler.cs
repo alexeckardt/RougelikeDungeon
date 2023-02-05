@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Collision;
 using System;
@@ -149,5 +150,42 @@ namespace RougelikeDungeon
 
             return null;
         }
+
+        //
+        // Instance
+        //
+
+        public void LoadObjects(ContentManager Content) {
+
+            //Load All
+            foreach (GameObject obj in Objects) {
+                obj.Initalize();
+                obj.LoadContent(Content);
+            }
+        }
+
+        public void UpdateObjects(ContentManager Content, GameTime time)
+        {
+            //
+            AddEnqueuedObjects(Content);
+
+            //
+            foreach (GameObject obj in Objects)
+            {
+                obj.Update(this, time);
+            }
+
+            //Delete All
+            ClearRemovedObjects();
+        }
+
+        public void DrawObjects(SpriteBatch spriteBatch)
+        {
+            foreach (GameObject obj in Objects)
+            {
+                obj.Draw(spriteBatch);
+            }
+        }
+
     }
 }

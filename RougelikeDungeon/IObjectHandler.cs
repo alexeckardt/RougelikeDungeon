@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Collision;
 using System;
@@ -22,5 +24,10 @@ namespace RougelikeDungeon
 
         public ICollideable CheckCollision(ICollideable input);
         public ICollideable CheckCollisionWith(ICollideable input, Type type);
+
+        public void LoadObjects(ContentManager Content);
+        public void UpdateObjects(ContentManager Content, GameTime time);
+        public void DrawObjects(SpriteBatch spriteBatch);
+
     }
 }

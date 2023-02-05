@@ -16,9 +16,6 @@ namespace RougelikeDungeon
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        //Have the REAL Version (Not the Interface)
-        ObjectHandler objects;
-
         Player player;
         Camera camera;
 
@@ -41,7 +38,6 @@ namespace RougelikeDungeon
 
         protected override void Initialize()
         {
-            objects = (ObjectHandler) ObjectHandler.Instance;
             camera = Camera.Instance;
 
             level = new LevelData();
@@ -76,7 +72,6 @@ namespace RougelikeDungeon
             //Update Chunks
             level.DecideChunksActive(camera.GetPosition());
 
-
             //Update Objects
             UpdateObjects(gameTime);
 
@@ -109,8 +104,6 @@ namespace RougelikeDungeon
                 //Draw
                 DrawObjects();
 
-                level.DrawActiveChunks(_spriteBatch);
-
             //End
             this._spriteBatch.End();
 
@@ -123,7 +116,7 @@ namespace RougelikeDungeon
         public void LoadLevel()
         {
             player = new Player(Vector2.Zero);
-            objects.AddObject(player);
+            level.AddObject(player);
 
             //Generate world in chunks
             level.GenerateWorld();
@@ -137,33 +130,17 @@ namespace RougelikeDungeon
         public void LoadObjects()
         {
             GameConstants.Instance.LoadContent(this.Content);
-
-            foreach (GameObject obj in objects.AsList()) {
-                obj.Initalize();
-                obj.LoadContent(this.Content);
-            }
+            level.LoadObjects(this.Content);
         }
 
         public void UpdateObjects(GameTime time)
         {
-            //
-            objects.AddEnqueuedObjects(this.Content);
-
-            //
-            foreach (GameObject obj in objects.AsList())
-            {
-                obj.Update(objects, time);
-            }
-
-            objects.ClearRemovedObjects();
+            level.UpdateObjects(this.Content, time);
         }
 
         public void DrawObjects()
         {
-            foreach (GameObject obj in objects.AsList())
-            {
-                obj.Draw(this._spriteBatch);
-            }
+            level.DrawObjects(this._spriteBatch);
         }
     }
 }

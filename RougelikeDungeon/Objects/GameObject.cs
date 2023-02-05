@@ -10,6 +10,8 @@ namespace RougelikeDungeon.Objects
 {
     internal class GameObject : IGameObject
     {
+        public bool Loaded = false;
+
         //Sprite Data
         protected Texture2D Sprite;
         protected Vector2 SpriteOffset = Vector2.Zero; //generally should be constant
@@ -51,6 +53,8 @@ namespace RougelikeDungeon.Objects
                     Collider.Size = new Vector2(Sprite.Width, Sprite.Height);
                 }
             }
+
+            Loaded = true;
         }
 
         public virtual void Update(ObjectHandler objects, GameTime gameTime) 
