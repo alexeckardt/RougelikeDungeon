@@ -13,16 +13,20 @@ namespace RougelikeDungeon.World
         TileMap TileHandler;
         ChunkHandler Chunks;
 
-        const int TileSize = 8;
-        const int ChunkSize = 8;
+        IObjectHandler objects;
 
-        const int ChunksLoadHorizontal = 10;
+        const int TileSize = 8;
+        const int ChunkSize = 16;
+
+        const int ChunksLoadHorizontal = 1;
         const int ChunksLoadVertical = 1;
 
         public LevelData()
         {
             TileHandler = new TileMap(TileSize);
             Chunks = new ChunkHandler(ChunkSize, TileSize);
+
+            objects = ObjectHandler.Instance;
         }
 
         public Vector2 PositionToTilePosition(Vector2 Position) => Position / TileSize;
@@ -44,6 +48,17 @@ namespace RougelikeDungeon.World
         public void DrawActiveChunks(SpriteBatch spriteBatch)
         {
             Chunks.DrawActiveChunks(spriteBatch);
+        }
+
+        //
+        //
+        //
+
+        public void GenerateWorld()
+        {
+            //TODO: Do it
+            GenerateRectangle(8, 8, 12, 12);
+
         }
 
     }

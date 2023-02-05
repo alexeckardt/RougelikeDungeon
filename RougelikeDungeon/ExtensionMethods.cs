@@ -16,12 +16,24 @@ namespace RougelikeDungeon
             float num = 1f / MathF.Sqrt(v.X * v.X + v.Y * v.Y);
             return v * num;
         }
-        
+
         public static Vector2 Floored(this Vector2 v)
         {
-            return new Vector2((int) v.X, (int) v.Y);
+            return new Vector2((int)v.X, (int)v.Y);
         }
-        
+
+        public static Vector2 FlooredNegatives(this Vector2 v)
+        {
+            Vector2 copy = new Vector2(v.X, v.Y);
+            int sX = Math.Sign(v.X);
+            int sY = Math.Sign(v.Y);
+
+            if (sX < 0) copy.X -= 1;
+            if (sY < 0) copy.Y -= 1;
+
+            return new Vector2((int) Math.Abs(copy.X) * sX, (int) Math.Abs(copy.Y) * sY);
+        }
+
         public static Vector2 Rounded(this Vector2 v)
         {
             return new Vector2((float) Math.Round(v.X), (float)Math.Round(v.Y));

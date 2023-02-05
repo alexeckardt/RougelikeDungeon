@@ -14,9 +14,8 @@ namespace RougelikeDungeon.World
         Dictionary<Vector2, Chunk> ChunkMap;
         List<Vector2> ActiveChunkId;
 
-
         int ChunkSize;
-        int TileSize;
+        int TileSize; //pixels per tile edge
 
         public ChunkHandler(int chunkWidth, int tileSize)
         {
@@ -27,7 +26,7 @@ namespace RougelikeDungeon.World
             TileSize = tileSize;
         }
 
-        public Vector2 GetChunkId(Vector2 TilePosition) => (TilePosition / ChunkSize).Floored();
+        public Vector2 GetChunkId(Vector2 TilePosition) => (TilePosition / ChunkSize).FlooredNegatives();
         public Vector2 GetInChunkPosition(Vector2 TilePosition) => (new Vector2(TilePosition.X % ChunkSize, TilePosition.Y % ChunkSize));
         public Chunk GetChunk(Vector2 ChunkId)
         {
@@ -36,7 +35,7 @@ namespace RougelikeDungeon.World
                 return ChunkMap[ChunkId];
 
             //Create a new Chunk
-            Chunk myChunk = new Chunk(ChunkId, TileSize, ChunkSize * TileSize);
+            Chunk myChunk = new Chunk(ChunkId, ChunkSize, ChunkSize * TileSize);
             ChunkMap[ChunkId] = myChunk;
 
             return myChunk;
@@ -94,11 +93,14 @@ namespace RougelikeDungeon.World
             {
                 Vector2 ChunkPosition = GetInChunkPosition(TilePosition);
 
-                int placementWidth = Math.Min(ChunkSize - (int)ChunkPosition.X, tileWLeft);
+                int placementWidth = Math.Min(ChunkSize - 1 -(int)ChunkPosition.X, tileWLeft);
                 tileWLeft -= placementWidth;
 
-                int placementHeight = Math.Min(ChunkSize - (int)ChunkPosition.Y, tileHLeft);
+                int placementHeight = Math.Min(ChunkSize - 1 - (int)ChunkPosition.Y, tileHLeft);
                 tileHLeft -= placementHeight;
+
+                if (placementWidth <= 0 || placementWidth <= 0)
+                    break;
 
                 var tilePlacementSize = new Vector2(placementWidth, placementHeight);
 
@@ -106,7 +108,7 @@ namespace RougelikeDungeon.World
                 chunkPlacingIn.PlaceSolid(ChunkPosition, tilePlacementSize);
 
                 //Itterate
-                TilePosition += tilePlacementSize;
+                TilePosition += tilePlacementSize + Vector2.One;
             }
         }
     }

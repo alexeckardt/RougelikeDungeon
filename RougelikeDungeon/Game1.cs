@@ -18,6 +18,7 @@ namespace RougelikeDungeon
 
         //Have the REAL Version (Not the Interface)
         ObjectHandler objects;
+
         Player player;
         Camera camera;
 
@@ -45,9 +46,6 @@ namespace RougelikeDungeon
 
             level = new LevelData();
 
-            //Pregenerate chunks
-            level.DecideChunksActive(Vector2.Zero);
-
             base.Initialize();
         }
 
@@ -74,6 +72,10 @@ namespace RougelikeDungeon
                     player.Guns.LoadContent(this.Content);
                 }
             }
+
+            //Update Chunks
+            level.DecideChunksActive(camera.GetPosition());
+
 
             //Update Objects
             UpdateObjects(gameTime);
@@ -120,11 +122,14 @@ namespace RougelikeDungeon
 
         public void LoadLevel()
         {
-            player = new Player(new Vector2(30, 30));
+            player = new Player(Vector2.Zero);
             objects.AddObject(player);
-            objects.AddObject(new GenericSolid(new Vector2(12, 12), new Vector2(4, -1)));
-            objects.AddObject(new GenericBullet(new Vector2(12, 32)));
-            objects.AddObject(new Enemy(new Vector2(50, 40)));
+
+            //Generate world in chunks
+            level.GenerateWorld();
+
+            //Activate necessary chunks
+            level.DecideChunksActive(player.Position);
 
             LoadObjects();
         }

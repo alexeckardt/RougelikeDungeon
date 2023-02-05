@@ -146,5 +146,7 @@ namespace RougelikeDungeon.Utilities
         {
             return TransformMatrix; //Return the transformMatrix we calculated earlier in this frame.
         }
+
+        public Vector2 GetPosition() => Position;
     }
 }

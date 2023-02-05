@@ -21,6 +21,7 @@ namespace RougelikeDungeon.World
         public Chunk(Vector2 chunkId, int tilePerAxis, int chunkRealWorldWidth)
         {
             ChunkId = chunkId.Floored();
+            solids = new();
 
             solidTileHere = new bool[tilePerAxis, tilePerAxis];
             tileIds = new int[tilePerAxis, tilePerAxis];
@@ -43,7 +44,7 @@ namespace RougelikeDungeon.World
             //Update
             for (int i = (int) InChunkPosition.X; i < InChunkPosition.X + TileWidth.X; i++)
             {
-                for (int j = (int)InChunkPosition.Y; i < InChunkPosition.Y + TileWidth.Y; j++)
+                for (int j = (int)InChunkPosition.Y; j < InChunkPosition.Y + TileWidth.Y; j++)
                 {
                     solidTileHere[i, j] = true;
                 }
