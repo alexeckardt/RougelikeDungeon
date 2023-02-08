@@ -6,6 +6,7 @@ using RougelikeDungeon.Guns;
 using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.Objects.Guns;
 using RougelikeDungeon.Utilities;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,7 +71,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             base.LoadContent(content);
         }
 
-        public override void Update(ObjectHandler objects, GameTime gameTime)
+        public override void Update(ILevelDataInstanceExposure level, GameTime gameTime)
         {
             var time = (float) gameTime.ElapsedGameTime.TotalSeconds;
             var inputDirection = GetKeyboardInputDirection().Normalized();
@@ -79,15 +80,15 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             Velocity = Vector2.Lerp(Velocity, inputDirection * MoveSpeed, MoveSlip * time);
 
             //Collision
-            Vector2 MoveVel = DoCollision(Velocity * time, objects);
+            Vector2 MoveVel = DoCollision(Velocity * time, level);
 
             //Add To Position
             Position += MoveVel;
 
-            TryShoot(objects);
+            TryShoot(level);
 
             //Update Base
-            base.Update(objects, gameTime);
+            base.Update(level, gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -136,9 +137,9 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             return new Vector2(right - left, down - up);
         }
 
-        private Vector2 DoCollision(Vector2 MoveVel, ObjectHandler objects)
+        private Vector2 DoCollision(Vector2 MoveVel, ILevelCollisions level)
         {
-            Solid collider = objects.CheckSolidCollision(Collider, MoveVel);
+            Solid collider = level.CheckSolidCollision(Collider, MoveVel);
             if (collider != null) //Collision Hit
             {
                 Vector2 stepVelocity = MoveVel.Signed() * CollisionStep;
@@ -150,7 +151,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
                 {
                     for (float i = CollisionStep; i <= 1f; i += CollisionStep)
                     {
-                        var subStepCollidedSolid = objects.CheckSolidCollision(Collider, stepVelocityY);
+                        var subStepCollidedSolid = level.CheckSolidCollision(Collider, stepVelocityY);
                         bool freeMove = subStepCollidedSolid == null;
 
                         if (freeMove)
@@ -173,7 +174,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
                 {
                     for (float i = CollisionStep; i <= 1f; i += CollisionStep)
                     {
-                        var subStepCollidedSolid = objects.CheckSolidCollision((CollisionBox)Collider, stepVelocityX);
+                        var subStepCollidedSolid = level.CheckSolidCollision((CollisionBox)Collider, stepVelocityX);
                         bool freeMove = subStepCollidedSolid == null;
 
                         if (freeMove)
@@ -197,7 +198,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
             return MoveVel;
         }
 
-        public void TryShoot(ObjectHandler objects)
+        public void TryShoot(ILevelInstanceContainer level)
         {
 
             var click = Input.Instance.MouseLeftClicked();
@@ -244,7 +245,7 @@ namespace RougelikeDungeon.Objects.PlayerObjects
                 Vector2 BulletSpawnPosition = Position + finalOffset;
 
                 //Shoot Gun, Side Effects
-                CurrentGunHolder.Shoot(objects, BulletSpawnPosition, MousePos - Position);
+                CurrentGunHolder.Shoot(level, BulletSpawnPosition, MousePos - Position);
             }
         }
 

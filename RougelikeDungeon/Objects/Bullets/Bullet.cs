@@ -8,6 +8,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using RougelikeDungeon.Guns.Bullets;
 using RougelikeDungeon.Objects.Collision;
+using RougelikeDungeon.World;
+using RougelikeDungeon.World.Level;
 
 namespace RougelikeDungeon.Objects.Bullets
 {
@@ -34,9 +36,9 @@ namespace RougelikeDungeon.Objects.Bullets
             base.LoadContent(content);
         }
 
-        public override void Update(ObjectHandler objects, GameTime gameTime)
+        public override void Update(ILevelDataInstanceExposure level, GameTime gameTime)
         {
-            base.Update(objects, gameTime);
+            base.Update(level, gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

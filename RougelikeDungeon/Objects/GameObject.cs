@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects.Collision;
+using RougelikeDungeon.World;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 
@@ -31,7 +33,8 @@ namespace RougelikeDungeon.Objects
         public bool MarkedToRemove = false;
 
         //Collision
-        public ICollideable Collider;
+        public ICollideable Collider { get; set; }
+        public bool IsActive { get => Active; }
 
         public GameObject() { }
 
@@ -57,7 +60,7 @@ namespace RougelikeDungeon.Objects
             Loaded = true;
         }
 
-        public virtual void Update(ObjectHandler objects, GameTime gameTime) 
+        public virtual void Update(ILevelDataInstanceExposure level, GameTime gameTime) 
         {
             //Update My Collision Box's Position
             Collider.Position = Position;
@@ -82,12 +85,12 @@ namespace RougelikeDungeon.Objects
         }
 
         //Set To Destroy
-        public virtual void DestroySelf(ObjectHandler objects)
+        public virtual void DestroySelf(ILevelDataInstanceExposure level)
         {
             if (MarkedToRemove) return;
 
             //Remove
-            objects.RemoveObject(this);
+            level.RemoveObject(this);
             MarkedToRemove = true;
         }
 

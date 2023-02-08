@@ -4,6 +4,7 @@ using RougelikeDungeon.Guns.Guns;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Bullets;
 using RougelikeDungeon.Objects.Guns;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace RougelikeDungeon.Guns
             pulloutStarted = DateTime.UtcNow;
         }
 
-        public void Shoot(ObjectHandler objects, Vector2 SpawnPosition, Vector2 ShootDirection)
+        public void Shoot(ILevelInstanceContainer level, Vector2 SpawnPosition, Vector2 ShootDirection)
         {
             int bulletsToShoot = Math.Min(ShotsLeft, Gun.BulletsPerShot);
 
@@ -103,7 +104,7 @@ namespace RougelikeDungeon.Guns
                 newBullet.SetFirePosition(ShootDirection);
 
                 //Add Instance To World
-                objects.AddObject(newBullet);
+                level.AddObject(newBullet);
             }
 
             //Update

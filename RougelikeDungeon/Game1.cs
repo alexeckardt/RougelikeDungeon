@@ -6,7 +6,7 @@ using RougelikeDungeon.Objects.Bullets;
 using RougelikeDungeon.Objects.EnemyObjects;
 using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Utilities;
-using RougelikeDungeon.World;
+using RougelikeDungeon.World.Level;
 using System.Collections.Generic;
 
 namespace RougelikeDungeon
@@ -40,7 +40,7 @@ namespace RougelikeDungeon
         {
             camera = Camera.Instance;
 
-            level = new LevelData();
+            level = LevelData.OverrideInstance;
 
             base.Initialize();
         }

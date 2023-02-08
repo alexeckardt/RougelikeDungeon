@@ -7,6 +7,8 @@ using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.Objects.Guns;
 using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Utilities;
+using RougelikeDungeon.World;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,18 +58,18 @@ namespace RougelikeDungeon.Objects.EnemyObjects
             base.LoadContent(content);
         }
 
-        public override void Update(ObjectHandler objects, GameTime gameTime)
+        public override void Update(ILevelDataInstanceExposure level, GameTime gameTime)
         {
             var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             //Collision
-            Vector2 MoveVel = DoCollision(Velocity * time, objects);
+            Vector2 MoveVel = DoCollision(Velocity * time, level);
 
             //Add To Position
             Position += MoveVel;
 
             //Update Base
-            base.Update(objects, gameTime);
+            base.Update(level, gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
@@ -82,9 +84,9 @@ namespace RougelikeDungeon.Objects.EnemyObjects
             base.Draw(spriteBatch);
         }
 
-        private Vector2 DoCollision(Vector2 MoveVel, ObjectHandler objects)
+        private Vector2 DoCollision(Vector2 MoveVel, ILevelDataInstanceExposure level)
         {
-            Solid collider = objects.CheckSolidCollision((CollisionBox)Collider, MoveVel);
+            Solid collider = level.CheckSolidCollision((CollisionBox) Collider, MoveVel);
             if (collider != null) //Collision Hit
             {
                 Vector2 stepVelocity = MoveVel.Signed() * CollisionStep;
@@ -96,7 +98,7 @@ namespace RougelikeDungeon.Objects.EnemyObjects
                 {
                     for (float i = CollisionStep; i <= 1f; i += CollisionStep)
                     {
-                        var subStepCollidedSolid = objects.CheckSolidCollision((CollisionBox)Collider, stepVelocityY);
+                        var subStepCollidedSolid = level.CheckSolidCollision((CollisionBox)Collider, stepVelocityY);
                         bool freeMove = subStepCollidedSolid == null;
 
                         if (freeMove)
@@ -119,7 +121,7 @@ namespace RougelikeDungeon.Objects.EnemyObjects
                 {
                     for (float i = CollisionStep; i <= 1f; i += CollisionStep)
                     {
-                        var subStepCollidedSolid = objects.CheckSolidCollision((CollisionBox)Collider, stepVelocityX);
+                        var subStepCollidedSolid = level.CheckSolidCollision((CollisionBox)Collider, stepVelocityX);
                         bool freeMove = subStepCollidedSolid == null;
 
                         if (freeMove)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -102,11 +103,6 @@ namespace RougelikeDungeon.Objects.Collision
             Size = new Vector2(width, height);
         }
 
-        private void AddReference()
-        {
-            ObjectHandler.Instance.AddCollideableReference(this);
-        }
-
         //Methods
 
         public bool Intersects(ICollideable other)
@@ -151,7 +147,6 @@ namespace RougelikeDungeon.Objects.Collision
             CreatorType = creator.GetType();
 
             MarkEnabled();
-            AddReference();
         }
 
         public void MarkEnabled()

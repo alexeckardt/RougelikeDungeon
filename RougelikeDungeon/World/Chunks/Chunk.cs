@@ -2,18 +2,20 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Objects;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.World
+namespace RougelikeDungeon.World.Chunks
 {
-    internal class Chunk
+    internal class Chunk : IActiveChunk
     {
-        HashSet<GameObject> chunkObjects;
+        HashSet<IGameObject> chunkObjects;
         bool[,] solidTileHere; //Used for Tile Generation, Discarded After Use
         int[,] tileIds;
 
@@ -47,7 +49,7 @@ namespace RougelikeDungeon.World
             chunkObjects.Add(solid);
 
             //Update
-            for (int i = (int) InChunkPosition.X; i < InChunkPosition.X + TileWidth.X; i++)
+            for (int i = (int)InChunkPosition.X; i < InChunkPosition.X + TileWidth.X; i++)
             {
                 for (int j = (int)InChunkPosition.Y; j < InChunkPosition.Y + TileWidth.Y; j++)
                 {
@@ -59,7 +61,6 @@ namespace RougelikeDungeon.World
         //
         // Loading Chunk Instances
         //
-
         public void LoadChunkInstances(ContentManager content)
         {
             //Load All
@@ -87,7 +88,7 @@ namespace RougelikeDungeon.World
                     obj.LoadContent(content);
                 }
 
-                obj.Update((ObjectHandler) ObjectHandler.Instance, time);
+                obj.Update(LevelData.Instance, time);
             }
         }
 
@@ -98,10 +99,10 @@ namespace RougelikeDungeon.World
         public void DrawBorder(SpriteBatch spriteBatch)
         {
             //Draw Border
-            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId*ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId*ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(0, 1))*ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(1, 0))*ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(0, 1)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(1, 0)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, .999f);
         }
 
         public void Draw(SpriteBatch spriteBatch, TileMap tileset)
@@ -122,6 +123,12 @@ namespace RougelikeDungeon.World
                 }
             }
         }
+
+        //
+        //
+        //
+
+        public HashSet<IGameObject> ChunkObjects { get => chunkObjects; }
 
     }
 }

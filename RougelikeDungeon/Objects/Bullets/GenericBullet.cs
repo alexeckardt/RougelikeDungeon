@@ -11,6 +11,8 @@ using RougelikeDungeon.Objects.Collision;
 using System.ComponentModel.DataAnnotations;
 using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Objects.EnemyObjects;
+using RougelikeDungeon.World;
+using RougelikeDungeon.World.Level;
 
 namespace RougelikeDungeon.Objects.Bullets
 {
@@ -43,7 +45,7 @@ namespace RougelikeDungeon.Objects.Bullets
             SetSpriteCenteredOrigin();
         }
 
-        public override void Update(ObjectHandler objects, GameTime gameTime)
+        public override void Update(ILevelDataInstanceExposure level, GameTime gameTime)
         {
             var flaggedToDestroy = false;
             var time = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -56,14 +58,14 @@ namespace RougelikeDungeon.Objects.Bullets
             }
 
             //Hit Solid
-            var collidingSolid = objects.CheckSolidCollision((CollisionBox)Collider);
+            var collidingSolid = level.CheckSolidCollision((CollisionBox)Collider);
             if (!flaggedToDestroy && collidingSolid != null)
             {
                 flaggedToDestroy = true;
             }
 
             //Check Collision Of Enemy
-            var collidedWith = objects.CheckCollisionWith(Collider, typeof(Enemy));
+            var collidedWith = level.CheckCollisionWith(Collider, typeof(Enemy));
             if (collidedWith != null)
             {
                 flaggedToDestroy = true;
@@ -72,7 +74,7 @@ namespace RougelikeDungeon.Objects.Bullets
             //Exit
             if (flaggedToDestroy)
             {
-                DestroySelf(objects);
+                DestroySelf(level);
                 return;
             }
 
@@ -80,7 +82,7 @@ namespace RougelikeDungeon.Objects.Bullets
             Position += MovementDirection * Speed * time;
 
             //Update
-            base.Update(objects, gameTime);
+            base.Update(level, gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

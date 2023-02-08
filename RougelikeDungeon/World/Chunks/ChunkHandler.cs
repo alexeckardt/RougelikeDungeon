@@ -8,12 +8,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.World
+namespace RougelikeDungeon.World.Chunks
 {
-    internal class ChunkHandler
+    internal class ChunkHandler : IActiveChunkHandler
     {
         Dictionary<Vector2, Chunk> ChunkMap;
-        List<Vector2> ActiveChunkId;
+        List<Vector2> ActiveChunkIds;
 
         int ChunkSize;
         int TileSize; //pixels per tile edge
@@ -21,14 +21,14 @@ namespace RougelikeDungeon.World
         public ChunkHandler(int chunkWidth, int tileSize)
         {
             ChunkMap = new();
-            ActiveChunkId = new();
+            ActiveChunkIds = new();
 
             ChunkSize = chunkWidth;
             TileSize = tileSize;
         }
 
         public Vector2 GetChunkId(Vector2 TilePosition) => (TilePosition / ChunkSize).FlooredNegatives();
-        public Vector2 GetInChunkPosition(Vector2 TilePosition) => (new Vector2(TilePosition.X % ChunkSize, TilePosition.Y % ChunkSize));
+        public Vector2 GetInChunkPosition(Vector2 TilePosition) => new Vector2(TilePosition.X % ChunkSize, TilePosition.Y % ChunkSize);
         public Chunk GetChunk(Vector2 ChunkId)
         {
             //Singleton Esk
@@ -51,18 +51,18 @@ namespace RougelikeDungeon.World
         public void ActivateAllChunks(Vector2 FromCenter, Vector2 SurroundingBox)
         {
             //Reset
-            ActiveChunkId.Clear();
+            ActiveChunkIds.Clear();
 
             //Offset
-            var w = (int) SurroundingBox.X / 2;
-            var h = (int) SurroundingBox.Y / 2;
+            var w = (int)SurroundingBox.X / 2;
+            var h = (int)SurroundingBox.Y / 2;
 
             //Enable
             for (int i = 0; i < SurroundingBox.X; i++)
             {
                 for (int j = 0; j < SurroundingBox.Y; j++)
                 {
-                    ActiveChunkId.Add(FromCenter + new Vector2(i-w, j-h));
+                    ActiveChunkIds.Add(FromCenter + new Vector2(i - w, j - h));
                 }
             }
         }
@@ -72,7 +72,7 @@ namespace RougelikeDungeon.World
         //
         public void LoadActiveChunks(ContentManager content)
         {
-            foreach (Vector2 ids in ActiveChunkId)
+            foreach (Vector2 ids in ActiveChunkIds)
             {
                 Chunk activeChunk = GetChunk(ids);
 
@@ -83,7 +83,7 @@ namespace RougelikeDungeon.World
 
         public void UpdateActiveChunks(ContentManager content, GameTime time)
         {
-            foreach (Vector2 ids in ActiveChunkId)
+            foreach (Vector2 ids in ActiveChunkIds)
             {
                 Chunk activeChunk = GetChunk(ids);
 
@@ -100,7 +100,7 @@ namespace RougelikeDungeon.World
         //
         public void DrawActiveChunks(SpriteBatch spriteBatch)
         {
-            foreach (Vector2 chunkId in ActiveChunkId)
+            foreach (Vector2 chunkId in ActiveChunkIds)
             {
                 Chunk chunkDrawing = GetChunk(chunkId);
 
@@ -116,14 +116,14 @@ namespace RougelikeDungeon.World
         public void PlaceSolid(Vector2 TilePosition, Vector2 TileSize)
         {
             //Place in a chunk
-            int tileWLeft = (int) TileSize.X;
-            int tileHLeft = (int) TileSize.Y;
+            int tileWLeft = (int)TileSize.X;
+            int tileHLeft = (int)TileSize.Y;
 
             while (tileWLeft > 0 || tileHLeft > 0)
             {
                 Vector2 ChunkPosition = GetInChunkPosition(TilePosition);
 
-                int placementWidth = Math.Min(ChunkSize - 1 -(int)ChunkPosition.X, tileWLeft);
+                int placementWidth = Math.Min(ChunkSize - 1 - (int)ChunkPosition.X, tileWLeft);
                 tileWLeft -= placementWidth;
 
                 int placementHeight = Math.Min(ChunkSize - 1 - (int)ChunkPosition.Y, tileHLeft);
@@ -141,5 +141,24 @@ namespace RougelikeDungeon.World
                 TilePosition += tilePlacementSize + Vector2.One;
             }
         }
+
+        //
+        //
+        //
+        public HashSet<IActiveChunk> ActiveChunks
+        {
+            get
+            {
+                HashSet<IActiveChunk> set = new();
+
+                foreach (Vector2 activeChunkId in ActiveChunkIds)
+                {
+                    set.Add(GetChunk(activeChunkId));
+                }
+
+                return set;
+            }
+        }
+
     }
 }

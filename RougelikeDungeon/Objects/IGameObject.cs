@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RougelikeDungeon.World.Level;
 
 namespace RougelikeDungeon.Objects
 {
@@ -16,8 +17,11 @@ namespace RougelikeDungeon.Objects
 
         public void LoadContent(ContentManager content);
 
-        public void Update(ObjectHandler objects, GameTime gameTime);
+        public void Update(ILevelDataInstanceExposure level, GameTime gameTime);
 
         public void Draw(SpriteBatch spriteBatch);
+
+        public ICollideable Collider { get; set; }
+        public bool IsActive { get; }
     }
 }

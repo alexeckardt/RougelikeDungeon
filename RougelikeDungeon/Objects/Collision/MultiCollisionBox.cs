@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.World;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -107,7 +109,6 @@ namespace RougelikeDungeon.Objects.Collision
             if (Enabled) return;
 
             MarkEnabled();
-            AddReference();
 
             foreach (ICollideable collision in Collideables)
             {
@@ -121,11 +122,6 @@ namespace RougelikeDungeon.Objects.Collision
         {
             //Mark
             Enabled = true;
-        }
-
-        private void AddReference()
-        {
-            ObjectHandler.Instance.AddCollideableReference(this);
         }
 
         public bool IsEnabled() => Enabled;
