@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Objects;
+using RougelikeDungeon.Objects.Collision;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace RougelikeDungeon.World
         ChunkHandler Chunks;
 
         IObjectHandler objects;
+        SolidCollisions SolidCollisions;
 
         const int TileSize = 8;
         const int ChunkSize = 16;
@@ -82,6 +84,20 @@ namespace RougelikeDungeon.World
         }
 
         //
+        // Collision
+        //
+
+        public Solid CheckSolidCollision(ICollideable input) => SolidCollisions.CheckSolidCollision(input);
+
+        public Solid CheckSolidCollision(ICollideable input, Vector2 boxOffsetPosition) => SolidCollisions.CheckSolidCollision(input, boxOffsetPosition);
+
+        public Solid CheckSolidPosition(Vector2 input) => SolidCollisions.CheckSolidPosition(input);
+
+        public ICollideable CheckCollision(ICollideable input) => objects.CheckCollision(input);
+
+        public ICollideable CheckCollisionWith(ICollideable input, Type type) => objects.CheckCollisionWith(input, type);
+
+        //
         // Generation
         //
 
@@ -91,6 +107,5 @@ namespace RougelikeDungeon.World
             GenerateRectangle(8, 8, 12, 12);
 
         }
-
     }
 }

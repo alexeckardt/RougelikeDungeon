@@ -32,20 +32,18 @@ namespace RougelikeDungeon
 
         //
         private List<GameObject> Objects;
-
+        SolidCollisions SolidCollisions;
         //Adding & Removing
 
         private Queue<GameObject> ToAdd;
         private Queue<GameObject> ToRemove;
 
         //Copy References
-        private SolidCollisions SolidCollisions;
         private HashSet<ICollideable> Collidables;
 
         private ObjectHandler()
         {
             this.Objects = new();
-            SolidCollisions = new();
             Collidables = new();
 
             ToAdd = new();
