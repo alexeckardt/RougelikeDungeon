@@ -134,8 +134,8 @@ namespace RougelikeDungeon.Objects.Collision
             if (!Enabled) return;
 
             //Draw Behind All
-            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Yellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, 1f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Green, 0f, Vector2.Zero, 1f, SpriteEffects.None, .999f);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, new Vector2(Left, Top), null, Color.Red, 0f, Vector2.Zero, Size, SpriteEffects.None, .9991f);
         }
 
         public CollisionBox GetCopy() => new CollisionBox(X, Y, Width, Height, OffsetX, OffsetY);

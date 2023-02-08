@@ -19,7 +19,7 @@ namespace RougelikeDungeon.World.Level
         const int TileSize = 8;
         const int ChunkSize = 16;
 
-        const int ChunksLoadHorizontal = 3;
+        const int ChunksLoadHorizontal = 5;
         const int ChunksLoadVertical = 3;
 
         public static LevelData inst;

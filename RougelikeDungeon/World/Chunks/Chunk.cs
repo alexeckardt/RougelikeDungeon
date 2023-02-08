@@ -25,6 +25,9 @@ namespace RougelikeDungeon.World.Chunks
         bool ChunkLoaded = false;
         public bool IsLoaded { get => ChunkLoaded; }
 
+        public int TileWidth;
+        public int TilesPerAxis;
+
         public Chunk(Vector2 chunkId, int tilePerAxis, int chunkRealWorldWidth)
         {
             ChunkId = chunkId.Floored();
@@ -33,9 +36,12 @@ namespace RougelikeDungeon.World.Chunks
             solidTileHere = new bool[tilePerAxis, tilePerAxis];
             tileIds = new int[tilePerAxis, tilePerAxis];
             ChunkRealWidth = chunkRealWorldWidth;
+
+            TilesPerAxis = tilePerAxis;
+            TileWidth = chunkRealWorldWidth / tilePerAxis;
         }
 
-        public Vector2 RealPosition(Vector2 InChunkPosition) => InChunkPosition + ChunkId * ChunkRealWidth;
+        public Vector2 RealPosition(Vector2 InChunkPosition) => InChunkPosition*TileWidth + ChunkId*ChunkRealWidth;
 
         //
         //
@@ -99,10 +105,11 @@ namespace RougelikeDungeon.World.Chunks
         public void DrawBorder(SpriteBatch spriteBatch)
         {
             //Draw Border
-            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(0, 1)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, .999f);
-            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(1, 0)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, .999f);
+            float borderDepth = 1f;
+            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, borderDepth);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, ChunkId * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, borderDepth);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(0, 1)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(ChunkRealWidth, 1), SpriteEffects.None, borderDepth);
+            spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(1, 0)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, borderDepth);
         }
 
         public void Draw(SpriteBatch spriteBatch, TileMap tileset)
