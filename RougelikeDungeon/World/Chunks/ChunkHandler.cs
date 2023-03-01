@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.World.Level;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -98,14 +99,14 @@ namespace RougelikeDungeon.World.Chunks
         //
         // Drawing
         //
-        public void DrawActiveChunks(SpriteBatch spriteBatch)
+        public void DrawActiveChunks(SpriteBatch spriteBatch, LevelTileSets tiles)
         {
             foreach (Vector2 chunkId in ActiveChunkIds)
             {
                 Chunk chunkDrawing = GetChunk(chunkId);
 
                 chunkDrawing.DrawBorder(spriteBatch);
-                chunkDrawing.Draw(spriteBatch, new TileMap(8)); //replace with the tileset
+                chunkDrawing.Draw(spriteBatch, tiles); //replace with the tileset
             }
         }
 
@@ -150,41 +151,15 @@ namespace RougelikeDungeon.World.Chunks
                 tileWLeft -= placementWidth;
                 TilePosition.X += placementWidth;
             }
+        }
 
+        public void PlaceTile(int tileX, int tileY, TileData tileData)
+        {
+            var TilePosition = new Vector2(tileX, tileY);
+            var ChunkPosition = GetInChunkPosition(TilePosition);
+            Chunk chunkPlacingIn = GetChunk(GetChunkId(TilePosition));
 
-
-            /*
-            while (tileWLeft > 0)
-            {
-
-                //How big is it?
-                int tileHLeft = (int)TileSize.Y;
-
-                Vector2 ChunkPosition = GetInChunkPosition(TilePosition);
-                int placementWidth = Math.Min(ChunkSize - 1 - (int)ChunkPosition.X, tileWLeft);
-                tileWLeft -= placementWidth;
-
-                while (tileHLeft > 0)
-                {
-                    ChunkPosition = GetInChunkPosition(TilePosition);
-                    int placementHeight = Math.Min(ChunkSize - 1 - (int)ChunkPosition.Y, tileHLeft);
-                    tileHLeft -= placementHeight;
-
-                    if (placementWidth <= 0 || placementWidth <= 0)
-                        break;
-
-                    var tilePlacementSize = new Vector2(placementWidth, placementHeight);
-
-                    Chunk chunkPlacingIn = GetChunk(GetChunkId(TilePosition));
-                    chunkPlacingIn.PlaceSolid(ChunkPosition, tilePlacementSize);
-
-                    //Itterate Vertically
-                    TilePosition += new Vector2(0, tilePlacementSize.Y + 1);
-                }
-
-                //Itterate Horizontally
-                TilePosition += new Vector2(placementWidth+1, 0);
-            }*/
+            chunkPlacingIn.SetTile(ChunkPosition, tileData);
         }
 
         //

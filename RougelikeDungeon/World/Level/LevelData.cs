@@ -5,16 +5,16 @@ using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.World.Chunks;
 using System;
+using System.Collections.Generic;
 
 namespace RougelikeDungeon.World.Level
 {
     internal class LevelData : ILevelCollisions, ILevelInstanceContainer, ILevelDataInstanceExposure, ILevelGeneration, ILevelCollisionHandler
     {
-        TileMap TileHandler;
-
         ChunkHandler chunkHandler;
         ObjectHandler objects;
         CollisionHandler collisionHandler;
+        LevelTileSets TileSets;
 
         const int TileSize = 8;
         const int ChunkSize = 16;
@@ -22,12 +22,15 @@ namespace RougelikeDungeon.World.Level
         const int ChunksLoadHorizontal = 5;
         const int ChunksLoadVertical = 3;
 
+
+        public SpriteBatch spriteBatch = null;
+
         public static LevelData inst;
         public static LevelData Instance
         {
             get
             {
-                inst ??= new LevelData();
+                inst ??= new LevelData(null);
                 return inst;
             }
         }
@@ -35,10 +38,12 @@ namespace RougelikeDungeon.World.Level
         {
             get
             {
-                inst = new LevelData();
+                inst = new LevelData(null);
                 return inst;
             }
         }
+
+        //-----------------------------------------------------------------------
 
         public ChunkHandler ChunkHandler
         {
@@ -54,22 +59,36 @@ namespace RougelikeDungeon.World.Level
         //
         //
 
-        private LevelData()
+        private LevelData(SpriteBatch spriteBatch)
         {
-            TileHandler = new TileMap(TileSize);
             chunkHandler = new ChunkHandler(ChunkSize, TileSize);
 
             objects = new ObjectHandler();
             collisionHandler = new();
+
+            spriteBatch = null;
+
+            TileSets = new();
         }
+
+        //
+        // Tile Set
+        //
+
+        public float AddTileSet(float atDepth, Texture2D texture)
+        {
+            var newSet = new TileSet(texture, TileSize);
+            TileSets.Add(atDepth, newSet);
+
+            //Passback Key
+            return atDepth;
+        }
+
+        //
+        // Positioning
+        //
 
         public Vector2 PositionToTilePosition(Vector2 Position) => Position / TileSize;
-
-        //Generation Scripts
-        public void GenerateRectangle(int tileX, int tileY, int tileW, int tileH)
-        {
-            chunkHandler.PlaceSolid(new Vector2(tileX, tileY), new Vector2(tileW, tileH));
-        }
 
         public void DecideChunksActive(Vector2 CameraPosition)
         {
@@ -114,7 +133,7 @@ namespace RougelikeDungeon.World.Level
             objects.DrawObjects(spriteBatch);
 
             //Update Chunk Instances
-            chunkHandler.DrawActiveChunks(spriteBatch);
+            chunkHandler.DrawActiveChunks(spriteBatch, TileSets);
         }
 
         //
@@ -136,10 +155,33 @@ namespace RougelikeDungeon.World.Level
         // Generation
         //
 
-        public void GenerateWorld()
+        public void GenerateWorld(ContentManager Content)
         {
+            //Setup Tiles
+            var floorTiles = AddTileSet(1, Content.Load<Texture2D>("tiles/basefloortiles"));
+            var wallTiles = AddTileSet(0, Content.Load<Texture2D>("tiles/basetiles"));
+
             //TODO: Do it
             GenerateRectangle(8, 8, 12, 12);
+            PlaceTile(0, 0, 9, floorTiles);
+            PlaceTile(1, 0, 9, floorTiles);
+            PlaceTile(2, 1, 9, floorTiles);
+            PlaceTile(1, 1, 9, floorTiles);
+            PlaceTile(3, 2, 9, floorTiles);
+
+            PlaceTile(15, 15, 4, wallTiles);
+        }
+
+        public void GenerateRectangle(int tileX, int tileY, int tileW, int tileH)
+        {
+            chunkHandler.PlaceSolid(new Vector2(tileX, tileY), new Vector2(tileW, tileH));
+        }
+
+        public void PlaceTile(int tileX, int tileY, int tileId, float tileDepth)
+        {
+            TileData tileData = new TileData(tileId, tileDepth);
+
+            chunkHandler.PlaceTile(tileX, tileY, tileData);
         }
     }
 }

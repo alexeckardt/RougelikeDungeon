@@ -17,7 +17,7 @@ namespace RougelikeDungeon.World.Chunks
     {
         HashSet<IGameObject> chunkObjects;
         bool[,] solidTileHere; //Used for Tile Generation, Discarded After Use
-        int[,] tileIds;
+        ChunkTiles tiles;
 
         Vector2 ChunkId;
         int ChunkRealWidth;
@@ -25,44 +25,26 @@ namespace RougelikeDungeon.World.Chunks
         bool ChunkLoaded = false;
         public bool IsLoaded { get => ChunkLoaded; }
 
-        public int TileWidth;
+        public int TileWidth { get => ChunkRealWidth / TilesPerAxis;  }
         public int TilesPerAxis;
+
+        public Vector2 Position { get => ChunkId * ChunkRealWidth; }
+        public Vector2 TilePosition { get => ChunkId * TilesPerAxis; }
 
         public Chunk(Vector2 chunkId, int tilePerAxis, int chunkRealWorldWidth)
         {
             ChunkId = chunkId.Floored();
             chunkObjects = new();
+            TilesPerAxis = tilePerAxis;
 
             solidTileHere = new bool[tilePerAxis, tilePerAxis];
-            tileIds = new int[tilePerAxis, tilePerAxis];
             ChunkRealWidth = chunkRealWorldWidth;
 
-            TilesPerAxis = tilePerAxis;
-            TileWidth = chunkRealWorldWidth / tilePerAxis;
+            tiles = new ChunkTiles(tilePerAxis, TileWidth);
+
         }
 
         public Vector2 RealPosition(Vector2 InChunkPosition) => InChunkPosition*TileWidth + ChunkId*ChunkRealWidth;
-
-        //
-        //
-        //
-
-        public void PlaceSolid(Vector2 InChunkPosition, Vector2 TileWidth)
-        {
-            //TODO: Optimize, don't allow overlap
-
-            GameObject solid = new GenericSolid(RealPosition(InChunkPosition), TileWidth);
-            chunkObjects.Add(solid);
-
-            //Update
-            for (int i = (int)InChunkPosition.X; i < InChunkPosition.X + TileWidth.X; i++)
-            {
-                for (int j = (int)InChunkPosition.Y; j < InChunkPosition.Y + TileWidth.Y; j++)
-                {
-                    solidTileHere[i, j] = true;
-                }
-            }
-        }
 
         //
         // Loading Chunk Instances
@@ -112,11 +94,11 @@ namespace RougelikeDungeon.World.Chunks
             spriteBatch.Draw(GameConstants.Instance.Pixel, (ChunkId + new Vector2(1, 0)) * ChunkRealWidth, null, Color.Yellow, 0f, Vector2.Zero, new Vector2(1, ChunkRealWidth), SpriteEffects.None, borderDepth);
         }
 
-        public void Draw(SpriteBatch spriteBatch, TileMap tileset)
+        public void Draw(SpriteBatch spriteBatch, LevelTileSets tilesets)
         {
             DrawChunkInstances(spriteBatch);
 
-            //Draw Tiles
+            tiles.DrawTiles(spriteBatch, tilesets, TilePosition);
         }
 
         public void DrawChunkInstances(SpriteBatch spriteBatch)
@@ -137,5 +119,30 @@ namespace RougelikeDungeon.World.Chunks
 
         public HashSet<IGameObject> ChunkObjects { get => chunkObjects; }
 
+        //
+        // GENERATION
+        //
+
+        public void PlaceSolid(Vector2 InChunkPosition, Vector2 TileWidth)
+        {
+            //TODO: Optimize, don't allow overlap
+
+            GameObject solid = new GenericSolid(RealPosition(InChunkPosition), TileWidth);
+            chunkObjects.Add(solid);
+
+            //Update
+            for (int i = (int)InChunkPosition.X; i < InChunkPosition.X + TileWidth.X; i++)
+            {
+                for (int j = (int)InChunkPosition.Y; j < InChunkPosition.Y + TileWidth.Y; j++)
+                {
+                    solidTileHere[i, j] = true;
+                }
+            }
+        }
+        
+        public void SetTile(Vector2 ChunkPosition, TileData tileData)
+        {
+            tiles.SetTile(tileData, ChunkPosition);
+        }
     }
 }

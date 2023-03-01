@@ -41,6 +41,7 @@ namespace RougelikeDungeon
             camera = Camera.Instance;
 
             level = LevelData.OverrideInstance;
+            level.spriteBatch = _spriteBatch; //pass
 
             base.Initialize();
         }
@@ -119,7 +120,7 @@ namespace RougelikeDungeon
             level.AddObject(player);
 
             //Generate world in chunks
-            level.GenerateWorld();
+            level.GenerateWorld(this.Content);
 
             //Activate necessary chunks
             level.DecideChunksActive(player.Position);
