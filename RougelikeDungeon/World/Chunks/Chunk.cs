@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.World.Level;
+using RougelikeDungeon.World.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace RougelikeDungeon.World.Chunks
     internal class Chunk : IActiveChunk
     {
         HashSet<IGameObject> chunkObjects;
-        bool[,] solidTileHere; //Used for Tile Generation, Discarded After Use
+        public bool[,] solidTileHere; //Used for Tile Generation, Discarded After Use
         ChunkTiles tiles;
 
         Vector2 ChunkId;
@@ -98,7 +99,7 @@ namespace RougelikeDungeon.World.Chunks
         {
             DrawChunkInstances(spriteBatch);
 
-            tiles.DrawTiles(spriteBatch, tilesets, TilePosition);
+            tiles.DrawTiles(spriteBatch, tilesets, Position);
         }
 
         public void DrawChunkInstances(SpriteBatch spriteBatch)

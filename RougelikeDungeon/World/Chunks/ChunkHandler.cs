@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.World.Level;
+using RougelikeDungeon.World.Tiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -27,6 +28,8 @@ namespace RougelikeDungeon.World.Chunks
             ChunkSize = chunkWidth;
             TileSize = tileSize;
         }
+
+        public List<Vector2> ChunkIdList { get => new List<Vector2>(ChunkMap.Keys); }
 
         public Vector2 GetChunkId(Vector2 TilePosition) => (TilePosition / ChunkSize).FlooredNegatives();
         public Vector2 GetInChunkPosition(Vector2 TilePosition) => new Vector2(TilePosition.X % ChunkSize, TilePosition.Y % ChunkSize);
@@ -157,7 +160,8 @@ namespace RougelikeDungeon.World.Chunks
         {
             var TilePosition = new Vector2(tileX, tileY);
             var ChunkPosition = GetInChunkPosition(TilePosition);
-            Chunk chunkPlacingIn = GetChunk(GetChunkId(TilePosition));
+            var cid = GetChunkId(TilePosition);
+            Chunk chunkPlacingIn = GetChunk(cid);
 
             chunkPlacingIn.SetTile(ChunkPosition, tileData);
         }

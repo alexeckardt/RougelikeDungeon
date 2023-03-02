@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.World.Level;
+using RougelikeDungeon.World.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;

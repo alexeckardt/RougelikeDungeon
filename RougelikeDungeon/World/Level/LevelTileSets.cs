@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RougelikeDungeon.World.Tiles;
 
 namespace RougelikeDungeon.World.Level
 {

@@ -7,7 +7,7 @@ using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RougelikeDungeon.World
+namespace RougelikeDungeon.World.Tiles
 {
     internal class TileMap
     {
@@ -20,9 +20,10 @@ namespace RougelikeDungeon.World
 
         public Dictionary<int, TileData> TileDict { get => Tiles; }
 
-        // ----------------------------------------------------------------------------------------
+        // ------------------------------------------------------------------------------
 
-        public TileMap(int tileMapWidth, int tileSize) {
+        public TileMap(int tileMapWidth, int tileSize)
+        {
 
             TileMapWidth = tileMapWidth;
             TileSize = tileSize;
@@ -72,7 +73,7 @@ namespace RougelikeDungeon.World
                 Rectangle tilesetRect = new Rectangle(TileSize * column, TileSize * row, TileSize, TileSize);
 
                 //Position From Tile Id in Map
-                var tilePosition = Origin + idToMapPosition(tileIds.Key)*TileSize;
+                var tilePosition = Origin + idToMapPosition(tileIds.Key) * TileSize;
 
                 //Draw
                 spriteBatch.Draw(TileSet.Texture, new Rectangle((int)tilePosition.X, (int)tilePosition.Y, TileSize, TileSize), tilesetRect, tile.blend, 0.0f, Vector2.Zero, SpriteEffects.None, tileDepth);

@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.World.Chunks;
+using RougelikeDungeon.World.Tiles;
 using System;
 using System.Collections.Generic;
 
@@ -163,13 +164,10 @@ namespace RougelikeDungeon.World.Level
 
             //TODO: Do it
             GenerateRectangle(8, 8, 12, 12);
-            PlaceTile(0, 0, 9, floorTiles);
-            PlaceTile(1, 0, 9, floorTiles);
-            PlaceTile(2, 1, 9, floorTiles);
-            PlaceTile(1, 1, 9, floorTiles);
-            PlaceTile(3, 2, 9, floorTiles);
+            GenerateRectangle(3, 6, 8, 10);
 
-            PlaceTile(15, 15, 4, wallTiles);
+
+            AutoTile(wallTiles);
         }
 
         public void GenerateRectangle(int tileX, int tileY, int tileW, int tileH)
@@ -182,6 +180,170 @@ namespace RougelikeDungeon.World.Level
             TileData tileData = new TileData(tileId, tileDepth);
 
             chunkHandler.PlaceTile(tileX, tileY, tileData);
+        }
+
+        public void AutoTile(float wallTiles)
+        {
+            var list = ChunkHandler.ChunkIdList;
+            Random rnd = new Random();
+
+            foreach (Vector2 chunkId in list)
+            {
+                Chunk c = ChunkHandler.GetChunk(chunkId);
+                Vector2 pos = c.TilePosition;
+
+                //Loop Over Chunk
+                for (int i = 0; i < ChunkSize; i++)
+                {
+                    for (int j = 0; j < ChunkSize; j++)
+                    {
+                        //Add
+                        int tileAdd = rnd.Next(2);
+
+                        //Decide
+                        int tileId = (int) TileSurroundingIndex(chunkId, new Vector2(i, j)) + tileAdd*(int)TileTypeBaseId.Count;
+
+
+                        if (tileId != 0)
+                        {
+                            PlaceTile(i + (int) pos.X, j + (int) pos.Y, tileId, wallTiles);
+                        }
+                    }
+                }
+            }
+        }
+
+        //only handels offsets of (-15, 15).
+        private bool CheckSolidAtPosition(Vector2 ChunkPosition, Vector2 ChunkId)
+        {
+            int xoff = 0;
+            int yoff = 0;
+
+            if (ChunkPosition.X < 0)
+                xoff = -1;
+            else if (ChunkPosition.X >= ChunkSize)
+                xoff = 1;
+
+            if (ChunkPosition.Y < 0)
+                yoff = -1;
+            else if (ChunkPosition.Y >= ChunkSize)
+                yoff = 1;
+
+            ChunkId += new Vector2(xoff, yoff);
+            ChunkPosition += new Vector2(xoff, yoff) * -ChunkSize; //offset
+
+            Chunk c = ChunkHandler.GetChunk(ChunkId);
+            return c.solidTileHere[(int) ChunkPosition.X, (int) ChunkPosition.Y];
+
+        }
+
+        public enum TileTypeBaseId
+        {
+            Empty = 0,
+            Filled = 1,
+            TopLeftCorner = 2,
+            TopEdge = 3,
+            TopRightCorner = 4,
+            RightEdge = 5,
+            BottomRightCorner = 6,
+            BottomEdge = 7,
+            BottomLeftCorner = 8,
+            LeftEdge = 9,
+
+            BottomRightCrease = 10,
+            BottomLeftCrease = 11,
+            TopRightCrease = 12,
+            TopLeftCrease = 13,
+
+            Count = 14
+        }
+
+        public TileTypeBaseId TileSurroundingIndex(Vector2 chunkId, Vector2 tilePosition)
+        {
+            //
+            // ___          ___         XX_         XXX
+            // ___ -> 0     XX_ -> 4    XX_ -> 9    XXX -> 11
+            // ___          XX_         XX_         _XX
+            //
+            // XX_          ___         XXX         XXX
+            // XX_ -> 6     XXX -> 3    XXX -> 1    XXX
+            // ___          XXX         XXX         XX_ -> 10
+            //
+            // XXX          ___         XX_
+            // XXX -> 7     _XX -> 2    XXX -> 12
+            // ___          _XX         XXX
+            //
+            // _XX          _XX         _XX
+            // _XX -> 8     _XX -> 5    XXX -> 13
+            // ___          _XX         XXX
+            //
+
+            
+            Vector2 pos = tilePosition;
+
+            bool center = CheckSolidAtPosition(pos, chunkId);
+
+            //Cannot Tile
+            if (!center)
+                return TileTypeBaseId.Empty;
+
+            //Get the others
+            // (if chunk doesn't exist a border chunk will be created -- it's empty, and isn't in the list.
+                 
+            //Edges
+            bool up = CheckSolidAtPosition(pos + new Vector2(0, -1), chunkId);
+            bool left = CheckSolidAtPosition(pos + new Vector2(-1, 0), chunkId);
+            bool right = CheckSolidAtPosition(pos + new Vector2(1, 0), chunkId);
+            bool down = CheckSolidAtPosition(pos + new Vector2(0, 1), chunkId);
+
+            //Corners
+            bool upleft = CheckSolidAtPosition(pos + new Vector2(-1, -1), chunkId);
+            bool upRight = CheckSolidAtPosition(pos + new Vector2(1, -1), chunkId);
+            bool downLeft = CheckSolidAtPosition(pos + new Vector2(-1, 1), chunkId);
+            bool downRight = CheckSolidAtPosition(pos + new Vector2(1, 1), chunkId);
+
+            //Surrouneded Tiles
+            if (left && right && up && down)
+            {
+                if (!upleft && upRight && downLeft && downRight) return TileTypeBaseId.TopLeftCrease;
+                if (upleft && !upRight && downLeft && downRight) return TileTypeBaseId.TopRightCrease;
+                if (upleft && upRight && !downLeft && downRight) return TileTypeBaseId.BottomLeftCrease;
+                if (upleft && upRight && downLeft && !downRight) return TileTypeBaseId.BottomRightCrease;
+
+                return TileTypeBaseId.Filled;
+            }
+
+            //Edges
+            if (left && right)
+            {
+                if (up) return TileTypeBaseId.BottomEdge;
+
+                if (down) return TileTypeBaseId.TopEdge;
+            }
+
+            //Edges
+            if (up && down)
+            {
+                if (left) return TileTypeBaseId.RightEdge;
+                if (right) return TileTypeBaseId.LeftEdge;
+            }
+
+            //Corners
+            if (right && down && downRight)
+                return TileTypeBaseId.TopLeftCorner;
+
+            if (left && down && downLeft)
+                return TileTypeBaseId.TopRightCorner;
+
+            if (right && up && upRight)
+                return TileTypeBaseId.BottomLeftCorner;
+
+            if (left && up && upleft)
+                return TileTypeBaseId.BottomRightCorner;
+
+
+            //Weird Combonation, Don't Tile
+            return TileTypeBaseId.Filled;
         }
     }
 }
