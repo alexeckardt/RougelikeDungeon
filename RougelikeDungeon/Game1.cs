@@ -8,6 +8,7 @@ using RougelikeDungeon.Objects.PlayerObjects;
 using RougelikeDungeon.Utilities;
 using RougelikeDungeon.World.Level;
 using System.Collections.Generic;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace RougelikeDungeon
 {
@@ -21,19 +22,30 @@ namespace RougelikeDungeon
 
         LevelData level;
 
+        int defScreenWidth = 320;
+        int defScreenHeight = 180;
+        int cameraDefScale = 5;
+        bool FullScreen = false;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
 
+            var recordingDebugCamera = true;
+
             //Set Resolution
             Resolution.Init(ref _graphics);
-            Resolution.SetVirtualResolution(320, 180); //Camera Screen Width
+            Resolution.SetVirtualResolution(defScreenWidth, defScreenHeight); //Camera Screen Width
 
-            int scale = 5;
+            //Zoom Out
+            if (recordingDebugCamera)
+            {
+                Resolution.SetVirtualResolution(defScreenWidth*3, defScreenHeight*3); //Camera Screen Width
+            }
 
-            Resolution.SetResolution(320*scale, 180*scale, false); //Window Size
+            Resolution.SetResolution(defScreenWidth * cameraDefScale, defScreenHeight * cameraDefScale, false); //Window Size
         }
 
         protected override void Initialize()
@@ -58,6 +70,9 @@ namespace RougelikeDungeon
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            //if (Keyboard.GetState().IsKeyDown(Keys.F11))
+                //Set
 
             //Update
             Input.Instance.Update();
