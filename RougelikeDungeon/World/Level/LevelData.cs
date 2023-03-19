@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using RougelikeDungeon.Objects;
 using RougelikeDungeon.Objects.Collision;
 using RougelikeDungeon.World.Chunks;
+using RougelikeDungeon.World.Generation;
 using RougelikeDungeon.World.Tiles;
 using System;
 using System.Collections.Generic;
@@ -16,6 +18,7 @@ namespace RougelikeDungeon.World.Level
         ObjectHandler objects;
         CollisionHandler collisionHandler;
         LevelTileSets TileSets;
+        LevelGenerator generator;
 
         const int TileSize = 8;
         const int ChunkSize = 16;
@@ -66,6 +69,7 @@ namespace RougelikeDungeon.World.Level
 
             objects = new ObjectHandler();
             collisionHandler = new();
+            generator = new(0);
 
             spriteBatch = null;
 
@@ -127,6 +131,11 @@ namespace RougelikeDungeon.World.Level
 
             //Update Chunk Instances
             chunkHandler.UpdateActiveChunks(content, time);
+
+            //Reload
+            if (Keyboard.GetState().IsKeyDown(Keys.Space)) {
+                generator.RegenerateRooms();
+            }
         }
 
         public void DrawObjects(SpriteBatch spriteBatch)
@@ -135,6 +144,10 @@ namespace RougelikeDungeon.World.Level
 
             //Update Chunk Instances
             chunkHandler.DrawActiveChunks(spriteBatch, TileSets);
+            generator.Draw(spriteBatch, 8); //debug
+
+            //
+            spriteBatch.Draw(GameConstants.Instance.Pixel, Vector2.Zero, null, Color.White, 0f, Vector2.Zero, Vector2.One, SpriteEffects.None, .0f);
         }
 
         //
@@ -162,12 +175,17 @@ namespace RougelikeDungeon.World.Level
             var floorTiles = AddTileSet(1, Content.Load<Texture2D>("tiles/basefloortiles"));
             var wallTiles = AddTileSet(0, Content.Load<Texture2D>("tiles/basetiles"));
 
-            //TODO: Do it
-            GenerateRectangle(8, 8, 12, 12);
-            GenerateRectangle(3, 6, 8, 10);
+            //Generate Rooms
+            generator.GenerateRooms();
 
+            GenerateSolids(generator);
 
             AutoTile(wallTiles);
+        }
+
+        public void GenerateSolids(LevelGenerator generator)
+        {
+            //TODO: Do it
         }
 
         public void GenerateRectangle(int tileX, int tileY, int tileW, int tileH)

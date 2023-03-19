@@ -52,11 +52,42 @@ namespace RougelikeDungeon
 
             return new Vector2(x, y);
         }
-        
+
         public static float Angle(this Vector2 v)
         {
-            return (float) (Math.Atan2(-v.Y, -v.X));
+            return (float)(Math.Atan2(-v.Y, -v.X));
         }
 
+        public static bool NextBool(this Random r)
+        {
+            float x = (r.Next() + 0.0f) / int.MaxValue;
+            return x < 0.5f;
+        }
+
+        public static int NextRandomSign(this Random r, int baseVal)
+        {
+            if (r.NextBool())
+            {
+                return baseVal;
+            }
+
+            return -baseVal;
+        }
+
+        public static int NextMaxRangeRandomSign(this Random r, int maxValue)
+        {
+            if (r.NextBool())
+            {
+                return r.Next(maxValue);
+            }
+
+            return -r.Next(maxValue);
+        }
+
+        public static int NextRange(this Random r, int minValue, int maxValue)
+        {
+            var c = maxValue - minValue;
+            return minValue + r.Next(c);
+        }
     }
 }
