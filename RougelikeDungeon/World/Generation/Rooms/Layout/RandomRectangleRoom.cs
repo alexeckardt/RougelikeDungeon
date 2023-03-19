@@ -39,8 +39,8 @@ namespace RougelikeDungeon.World.Generation.Rooms.Layout
             int hh = (Landscape) ? h : w;
 
             //from center
-            int x = (int)TileOrigin.X - ww / 2;
-            int y = (int)TileOrigin.Y - hh / 2;
+            int x = -ww / 2;
+            int y = -hh / 2;
 
             Rectangle box = new Rectangle(x, y, ww, hh);
 

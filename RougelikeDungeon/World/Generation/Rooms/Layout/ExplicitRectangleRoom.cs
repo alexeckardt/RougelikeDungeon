@@ -30,11 +30,7 @@ namespace RougelikeDungeon.World.Generation.Rooms.Layout
             int w = BaseWidth;
             int h = BaseHeight;
 
-            //from center
-            int x = (int)TileOrigin.X;
-            int y = (int)TileOrigin.Y;
-
-            Rectangle box = new Rectangle(x, y, w, h);
+            Rectangle box = new Rectangle(0, 0, w, h);
 
             //Create
             AddBox(box);

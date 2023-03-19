@@ -49,6 +49,11 @@ namespace RougelikeDungeon.World.Generation
             //Start
             GenerateStartingRoom();
 
+            var Door = KnownRoomDoors.PopRandom();
+            var newRoom = Rooms.GenerateRoomAtDoor(Door);
+            Rooms.Add(newRoom);
+
+            /*
             //Loop
             while (true)
             {
@@ -79,7 +84,7 @@ namespace RougelikeDungeon.World.Generation
                 {
                     //Room failed to be placed. It's okay, because we popped the door so this won't happen again.
                 }
-            }
+            }*/
 
             //Start Loop
         }
@@ -124,7 +129,7 @@ namespace RougelikeDungeon.World.Generation
             Rooms.Add(r);
             */
 
-            Rooms.Add(new RandomRectangleRoom(Vector2.Zero, KnownRoomDoors, 2, 22, 24));
+            Rooms.Add(new RandomRectangleRoom(Vector2.Zero, KnownRoomDoors, 1, 22, 24));
         }
 
         public void Draw(SpriteBatch spriteBatch, int tileSize)

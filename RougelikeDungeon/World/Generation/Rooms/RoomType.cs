@@ -9,8 +9,18 @@ namespace RougelikeDungeon.World.Generation.Rooms
     internal enum RoomType
     {
         None,
-        SimpleRoom,
+
+
+        GenericRoom, // holder, splits into other types of rooms
+        SmallSimpleRoom,
+        LargeSimpleRoom,
+
         Hallway,
+
         Boss,
+        BossHallway, //like in gungeon
+
+        ComplexRoom,
+        
     }
 }

@@ -19,6 +19,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
         protected readonly Random random;
 
         public bool IsHallway = false;
+        public bool AllowGeneratingPotentialDoors = true;
 
         int DoorWidth = 3;
         int PotentialDoorCount = 0;
@@ -31,7 +32,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
         public Room(Vector2 origin, DoorHolder doorsReference)
         {
             TileOrigin = origin;
-            Shape = new();
+            Shape = new(this);
             random = new();
             PotentialDoors = new();
 
@@ -48,38 +49,53 @@ namespace RougelikeDungeon.World.Generation.Rooms
             }
         }
 
+        public void AddBoxFromRealPosition(Rectangle box)
+        {
+            box.X -= (int) TileOrigin.X;
+            box.Y -= (int) TileOrigin.Y;
+
+            AddBox(box);
+        }
+
         public void AddBox(Rectangle box)
         {
             //Add the Edges Of The Box
             int forcedCornerSize = 1; //space corner must have
             var space = (DoorWidth + 1) / 2 + forcedCornerSize;
 
-            for (var i = space; i < box.Width - space; i++)
+            if (AllowGeneratingPotentialDoors)
             {
-                RoomDoor top = new RoomDoor(new Vector2(box.Left + i, box.Top-1), RoomDoorJigsaw.Top, RoomType.Hallway, this);
-                RoomDoor bottom = new RoomDoor(new Vector2(box.Left + i, box.Bottom), RoomDoorJigsaw.Bottom, RoomType.Hallway, this);
 
-                PotentialDoors.Add(top);
-                PotentialDoors.Add(bottom);
+                for (var i = space; i < box.Width - space; i++)
+                {
+                    RoomDoor top = new RoomDoor(new Vector2(box.Left + i, box.Top - 1), RoomDoorJigsaw.Top, RoomType.Hallway, this);
+                    RoomDoor bottom = new RoomDoor(new Vector2(box.Left + i, box.Bottom), RoomDoorJigsaw.Bottom, RoomType.Hallway, this);
 
-                PotentialDoorCount += 2;
+                    PotentialDoors.Add(top);
+                    PotentialDoors.Add(bottom);
+
+                    PotentialDoorCount += 2;
+                }
+
+                for (var i = space; i < box.Height - space; i++)
+                {
+                    RoomDoor left = new RoomDoor(new Vector2(box.Left - 1, box.Top + i), RoomDoorJigsaw.Left, RoomType.Hallway, this);
+                    RoomDoor right = new RoomDoor(new Vector2(box.Right, box.Top + i), RoomDoorJigsaw.Right, RoomType.Hallway, this);
+
+                    PotentialDoors.Add(left);
+                    PotentialDoors.Add(right);
+
+                    PotentialDoorCount += 2;
+                }
+
             }
-
-            for (var i = space; i < box.Height - space; i++)
-            {
-                RoomDoor left = new RoomDoor(new Vector2(box.Left-1, box.Top + i), RoomDoorJigsaw.Left, RoomType.Hallway, this);
-                RoomDoor right = new RoomDoor(new Vector2(box.Right, box.Top + i), RoomDoorJigsaw.Right, RoomType.Hallway, this);
-
-                PotentialDoors.Add(left);
-                PotentialDoors.Add(right);
-
-                PotentialDoorCount += 2;
-            }
-
-            CleanUpPotentialDoors();
 
             //Add Box
             Shape.AddShape(box);
+
+            //Remove Bad
+            CleanUpPotentialDoors();
+
         }
 
         private void CleanUpPotentialDoors()
@@ -89,7 +105,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
             //
             foreach (var edgePos in PotentialDoors)
             {
-                if (Shape.Collide(edgePos))
+                if (Shape.CollideLocal(edgePos))
                 {
                     toDelete.Enqueue(edgePos);
                 }
@@ -103,10 +119,19 @@ namespace RougelikeDungeon.World.Generation.Rooms
             }
         }
 
+        public RoomDoor GetRandomPotentialDoor() => PotentialDoors.ElementAt(random.Next(PotentialDoorCount));
+
+
         public RoomDoor ConvertPotentialDoor()
         {
+            if (!AllowGeneratingPotentialDoors)
+            {
+                PotentialDoors.Clear();
+                return null;
+            }
+
             //Get Random Door
-            var Door = PotentialDoors.ElementAt(random.Next(PotentialDoorCount));
+            var Door = GetRandomPotentialDoor();
 
             //Remove from Potentials
             PotentialDoors.Remove(Door);
@@ -114,6 +139,9 @@ namespace RougelikeDungeon.World.Generation.Rooms
 
             //Remove any Within Distance
             ClearForDoorway(Door);
+
+            //Get Real Position
+            Door.Position += TileOrigin;
 
             //Give Back
             return Door;
@@ -149,8 +177,56 @@ namespace RougelikeDungeon.World.Generation.Rooms
 
             foreach (RoomDoor potentialDoor in PotentialDoors)
             {
-                spriteBatch.Draw(GameConstants.Instance.Pixel, potentialDoor.Position * tileSize, null, Color.White*0.1f, 0f, Vector2.Zero, tileSize, SpriteEffects.None, .998f);
+                spriteBatch.Draw(GameConstants.Instance.Pixel, (potentialDoor.Position + TileOrigin) * tileSize, null, Color.White*0.1f, 0f, Vector2.Zero, tileSize, SpriteEffects.None, .998f);
             }
+        }
+
+        public Vector2 DirectionOffsetPosition(RoomDoorJigsaw direction)
+        {
+            switch (direction)
+            {
+                default:
+                case RoomDoorJigsaw.None:
+                    return Vector2.Zero;
+                case RoomDoorJigsaw.Right:
+                    return new Vector2(1, 0);
+                case RoomDoorJigsaw.Left:
+                    return new Vector2(-1, 0);
+                case RoomDoorJigsaw.Top:
+                    return new Vector2(0, -1);
+                case RoomDoorJigsaw.Bottom:
+                    return new Vector2(0, 1);
+            }
+        }
+
+        //
+        // Given some door, place this room in a position such that a random potential door matches the given door's position
+        //
+        public void MatchToDoorPosition(RoomDoor wantToMatch)
+        {
+
+            int c = PotentialDoorCount;
+
+            while (c > 0)
+            {
+                //Get Door at Random
+                RoomDoor aPotentialDoor = GetRandomPotentialDoor();
+
+                //Check Opposite, Good Door To Place
+                if (aPotentialDoor.DoorDirection == wantToMatch.OppositeDirection)
+                {
+                    TileOrigin = wantToMatch.Position - aPotentialDoor.Position - DirectionOffsetPosition(wantToMatch.DoorDirection); //REAL door position - potentialDoor's Local Position
+
+                    //Cleanup
+                    ClearForDoorway(aPotentialDoor);
+
+                    return;
+                }
+
+                c--;
+            }
+
+            //Fails, Room stays at 0,0 which means it will collide with the starting room.
         }
 
         public bool Contains(Vector2 tileCoord)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RougelikeDungeon.World.Generation.Rooms;
 using RougelikeDungeon.World.Generation.Rooms.Door;
 using System;
 using System.Collections.Generic;
@@ -13,31 +14,47 @@ namespace RougelikeDungeon.World.Generation
     {
 
         List<RoomDoor> DoorPosses = new();
-        List<RoomDoor> LegacyDoorPosses = new();
+        List<RoomDoor> PriorityDoorPosses = new();
+
+
+
+        List<RoomDoor> HistoryDoorPosses = new();
         private readonly Random random = new();
 
-        public bool IsEmpty { get => DoorPosses.Count == 0; }
+        public bool IsEmpty { get => DoorPosses.Count + PriorityDoorPosses.Count == 0; }
 
         public DoorHolder() { }
 
         //Add
         public void Add(RoomDoor newDoor)
         {
-            DoorPosses.Add(newDoor);
-            LegacyDoorPosses.Add(newDoor);
+            HistoryDoorPosses.Add(newDoor);
+            if (newDoor.RoomTypeWant == RoomType.Hallway)
+            {
+                DoorPosses.Add(newDoor);
+                return;
+            }
+
+            //Special Rooms, Rooms Should Come First
+            PriorityDoorPosses.Add(newDoor);
         }
 
         public RoomDoor PopRandom()
         {
+
+            if (PriorityDoorPosses.Count > 0)
+            {
+                int priorityInd = random.Next(PriorityDoorPosses.Count);
+                RoomDoor priortyDoor = PriorityDoorPosses[priorityInd];
+                PriorityDoorPosses.RemoveAt(priorityInd);
+                return priortyDoor;
+            }
+
             //Pass
             int ind = random.Next(DoorPosses.Count);
-
-            //
             RoomDoor pos = DoorPosses[ind];
             DoorPosses.RemoveAt(ind);
-
             return pos;
-
         }
 
         public RoomDoor GetRandom() => DoorPosses[random.Next(DoorPosses.Count)];
@@ -46,7 +63,7 @@ namespace RougelikeDungeon.World.Generation
         {
             Color col = Color.PaleVioletRed;
 
-            foreach (RoomDoor door in LegacyDoorPosses) {
+            foreach (RoomDoor door in HistoryDoorPosses) {
                 Vector2 doorPosition = door.Position;
 
                 spriteBatch.Draw(GameConstants.Instance.Pixel, doorPosition * tileSize, null, col, 0f, Vector2.Zero, tileSize, SpriteEffects.None, .996f);
