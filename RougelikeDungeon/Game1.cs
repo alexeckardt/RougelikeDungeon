@@ -42,7 +42,8 @@ namespace RougelikeDungeon
             //Zoom Out
             if (recordingDebugCamera)
             {
-                Resolution.SetVirtualResolution(defScreenWidth*3, defScreenHeight*3); //Camera Screen Width
+                int scale = 5;
+                Resolution.SetVirtualResolution(defScreenWidth*scale, defScreenHeight*scale); //Camera Screen Width
             }
 
             Resolution.SetResolution(defScreenWidth * cameraDefScale, defScreenHeight * cameraDefScale, false); //Window Size

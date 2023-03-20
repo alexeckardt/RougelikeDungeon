@@ -6,6 +6,7 @@ using RougelikeDungeon.World.Generation.Rooms.Layout;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,6 +19,14 @@ namespace RougelikeDungeon.World.Generation
         DoorHolder KnownRoomDoors;
         DebugTiles DebugTiles;
         Random random;
+
+        public bool Step = false;
+        public bool Done = false;
+
+        public int MaxStepDepth = 105;
+        private int stepDepth = 0;
+
+        const float DoorEatDistance = 250;
 
         public LevelGenerator(int seed)
         {
@@ -40,6 +49,9 @@ namespace RougelikeDungeon.World.Generation
             DebugTiles = new();
             Rooms = new(KnownRoomDoors);
 
+            Done = false;
+            stepDepth = 0;
+
             GenerateRooms();
         }
 
@@ -49,13 +61,15 @@ namespace RougelikeDungeon.World.Generation
             //Start
             GenerateStartingRoom();
 
-            var Door = KnownRoomDoors.PopRandom();
-            var newRoom = Rooms.GenerateRoomAtDoor(Door);
-            Rooms.Add(newRoom);
 
-            /*
-            //Loop
-            while (true)
+        }
+
+        public void GenerationStep()
+        {
+            stepDepth++;
+
+            //Basic Generation
+            if (stepDepth <= MaxStepDepth)
             {
                 //Check For Places to Create Rooms
                 if (KnownRoomDoors.IsEmpty)
@@ -64,13 +78,30 @@ namespace RougelikeDungeon.World.Generation
                     var doorMade = CreateDoor();
                     if (doorMade)
                     {
+                        //Exit Early, For Step
+                        return;
+                    }
+                    else
+                    {
                         //Finished
+                        stepDepth = MaxStepDepth;
                         return;
                     }
                 }
 
                 //Choose Door To Generate From
                 var Door = KnownRoomDoors.PopRandom();
+
+                //Eat Door
+                var distFromCenter = Door.Position.Length();
+                var chance = Math.Pow(distFromCenter / DoorEatDistance, 3);
+                var d = random.NextDouble();
+
+                if (d < chance)
+                {
+                    //Door Gets Popped.
+                    return;
+                }
 
                 //Create New Room
                 var newRoom = Rooms.GenerateRoomAtDoor(Door);
@@ -84,15 +115,18 @@ namespace RougelikeDungeon.World.Generation
                 {
                     //Room failed to be placed. It's okay, because we popped the door so this won't happen again.
                 }
-            }*/
-
-            //Start Loop
+            } else
+            {
+                //End
+                Rooms.CleanupDeadRooms();
+                Done = true;
+            }
         }
 
         private bool CreateDoor()
         {
             int trys = 0;
-            int maxtrys = 2000;
+            int maxtrys = 200;
 
             while (trys < maxtrys)
             {
@@ -104,9 +138,12 @@ namespace RougelikeDungeon.World.Generation
                 if (roomTesting.PotentialDoorsLeft > 0)
                 {
                     var doorPos = roomTesting.ConvertPotentialDoor();
-                    KnownRoomDoors.Add(doorPos);
 
-                    return true;
+                    if (doorPos != null)
+                    {
+                        KnownRoomDoors.Add(doorPos);
+                        return true;
+                    }
                 }
             }
 
@@ -129,7 +166,7 @@ namespace RougelikeDungeon.World.Generation
             Rooms.Add(r);
             */
 
-            Rooms.Add(new RandomRectangleRoom(Vector2.Zero, KnownRoomDoors, 1, 22, 24));
+            Rooms.Add(new RandomRectangleRoom(Vector2.Zero, KnownRoomDoors, 2, 22, 24));
         }
 
         public void Draw(SpriteBatch spriteBatch, int tileSize)

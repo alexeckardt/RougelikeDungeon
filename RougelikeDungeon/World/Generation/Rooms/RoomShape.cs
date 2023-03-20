@@ -45,7 +45,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
             foreach (var part2 in Parts)
             {
 
-                bool hasIntersection = part.Intersects(part2);
+                bool hasIntersection = part.Intersects(part2, buffer);
                 if (hasIntersection)
                 {
                     return true;

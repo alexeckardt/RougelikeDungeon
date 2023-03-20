@@ -17,8 +17,17 @@ namespace RougelikeDungeon.World.Generation.Rooms
         public readonly Random random;
 
         public int Count { get => Rooms.Count; }
+        private int RoomCount = 0; //excluding hallways
 
         public const int GenerationRetrysBeforeFail = 200;
+
+        //
+        //
+        const float TreasureRoomPercent = 0.01f;
+        const int TreasureRoomOnNthRoom = 6;
+        const float LargeRoomPercentOfSimple = 0.1f;
+        const float ComplexRoomDoorPercent = 0.3f;
+
 
         public RoomGenerator(DoorHolder doorHolder)
         {
@@ -45,7 +54,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
             {
                 if (room != allowedToIntersect)
                 {
-                    if (room.Collides(checking, 1)) {
+                    if (room.Collides(checking, 2)) {
                         return true;
                     }
                 }
@@ -76,13 +85,24 @@ namespace RougelikeDungeon.World.Generation.Rooms
 
                 case RoomType.BossHallway:
                     return GenerateHallway(doorAt);
+
+                case RoomType.TreasureRoom:
+                    return GenerateTreasureRoom(doorAt);
+            }
+        }
+
+        private void CompleteHallway(Room potentialHallway)
+        {
+            if (potentialHallway.IsHallway)
+            {
+                potentialHallway.CompleteHallway = true;
+                potentialHallway.AllowGeneratingPotentialDoors = false;
             }
         }
 
         public Room GenerateSimpleRoom(RoomDoor doorAt)
         {
-            bool MakeLargeRoom = random.NextDouble() < 0.1; //10% chance
-
+            bool MakeLargeRoom = random.NextDouble() < 0.9; //10% chance
 
             int maxSize = 25 + 25 * Convert.ToInt32(MakeLargeRoom);
             int minSize = maxSize / 2;
@@ -110,11 +130,32 @@ namespace RougelikeDungeon.World.Generation.Rooms
                     continue;
                 }
 
+                CompleteHallway(doorAt.Owner);
+
                 //Place New Room
+                RoomCount += 1;
                 return newRoom;
             }
 
             return null;
+        }
+
+        private Room GenerateTreasureRoom(RoomDoor doorAt)
+        {
+            Room newRoom = new ExplicitRectangleRoom(doorAt.Position, doorHolder, 0, 8, 8);
+            newRoom.MatchToDoorPosition(doorAt);
+            newRoom.DoorsCanCreate = 1;
+
+            //If Causes Issue, Kill this Hallway.
+            if (RoomIntersectsAnyOther(newRoom, doorAt.Owner))
+            {
+                return null;
+            }
+
+            //All Good, New Treasure Room
+            CompleteHallway(doorAt.Owner);
+            RoomCount += 1;
+            return newRoom;
         }
 
         public Room GenerateHallway(RoomDoor from)
@@ -165,8 +206,8 @@ namespace RougelikeDungeon.World.Generation.Rooms
                 }
 
                 //Testing for future collision
-                Room checkingTemp = new ExplicitRectangleRoom(pos+offsetPos, doorHolder, 0, realWidth*2, realHeight*2);
-                if (RoomIntersectsAnyOther(checkingTemp, from.Owner))
+                Room checkingCollisionTemp = new ExplicitRectangleRoom(pos+offsetPos*2, doorHolder, 0, realWidth*2, realHeight*2);
+                if (RoomIntersectsAnyOther(checkingCollisionTemp, from.Owner))
                 {
                     if (random.NextDouble() < 0.2) //20% chance to fail hallway
                     {
@@ -175,7 +216,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
 
                     //Force L
                     MakeLHallway = true;
-                    checkingTemp = null; //garbage collection
+                    checkingCollisionTemp = null; //garbage collection
                 }
 
                 //Create the new room
@@ -299,8 +340,10 @@ namespace RougelikeDungeon.World.Generation.Rooms
                 //Place Explicit Door At End Position
 
 
+                //What Room Do I Want?
+                RoomType nextRoomType = DecideNextRoomType();
 
-                var endDoor = new RoomDoor(endPos, doorEnd, RoomType.GenericRoom, newRoom);
+                var endDoor = new RoomDoor(endPos, doorEnd, nextRoomType, newRoom);
                 doorHolder.Add(endDoor);
 
                 return newRoom;
@@ -311,7 +354,45 @@ namespace RougelikeDungeon.World.Generation.Rooms
         }
         public Room GenerateBossArena(RoomDoor doorAt)
         {
+            RoomCount += 1;
             throw new NotImplementedException();
+        }
+
+        public void CleanupDeadRooms()
+        {
+            //Find to Delete
+            Queue<Room> toDelete = new();
+            foreach (Room room in Rooms)
+            {
+                if (room.IsHallway && !room.CompleteHallway)
+                {
+                    toDelete.Enqueue(room);
+                }
+            }
+
+            //Delete
+            while(toDelete.Count > 0)
+            {
+                Rooms.Remove(toDelete.Dequeue());
+            }
+        }
+
+        private RoomType DecideNextRoomType()
+        {
+
+            //Trasure
+            if (random.NextDouble() < TreasureRoomPercent || RoomCount == TreasureRoomOnNthRoom)
+            {
+                return RoomType.TreasureRoom;
+            }
+
+            //Complex
+            if (random.NextDouble() < ComplexRoomDoorPercent)
+            {
+                return RoomType.ComplexRoom;
+            }
+
+            return RoomType.GenericRoom;
         }
 
         //

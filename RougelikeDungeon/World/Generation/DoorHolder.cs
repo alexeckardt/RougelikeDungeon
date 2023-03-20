@@ -28,6 +28,11 @@ namespace RougelikeDungeon.World.Generation
         //Add
         public void Add(RoomDoor newDoor)
         {
+            if (newDoor == null)
+            {
+                return;
+            }
+
             HistoryDoorPosses.Add(newDoor);
             if (newDoor.RoomTypeWant == RoomType.Hallway)
             {

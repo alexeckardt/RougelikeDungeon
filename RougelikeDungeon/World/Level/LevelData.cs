@@ -26,6 +26,8 @@ namespace RougelikeDungeon.World.Level
         const int ChunksLoadHorizontal = 5;
         const int ChunksLoadVertical = 3;
 
+        bool HoldingSpace = false;
+
 
         public SpriteBatch spriteBatch = null;
 
@@ -133,9 +135,20 @@ namespace RougelikeDungeon.World.Level
             chunkHandler.UpdateActiveChunks(content, time);
 
             //Reload
-            if (Keyboard.GetState().IsKeyDown(Keys.Space)) {
-                generator.RegenerateRooms();
+            bool spaceHeld = Keyboard.GetState().IsKeyDown(Keys.Space);
+
+            if (spaceHeld && !HoldingSpace)
+            {
+                if (!generator.Done)
+                {
+                    generator.GenerationStep();
+                } else
+                {
+                    generator.RegenerateRooms();
+                }
             }
+
+            HoldingSpace = spaceHeld;
         }
 
         public void DrawObjects(SpriteBatch spriteBatch)

@@ -19,10 +19,12 @@ namespace RougelikeDungeon.World.Generation.Rooms
         protected readonly Random random;
 
         public bool IsHallway = false;
+        public bool CompleteHallway = false;
         public bool AllowGeneratingPotentialDoors = true;
 
         int DoorWidth = 3;
         int PotentialDoorCount = 0;
+        public int DoorsCanCreate = 2; //on average, have two doors
         protected int DoorsToSpawnWith = 0;
 
         int maxDoorSameWallSeperation {  get => DoorWidth * 2; }
@@ -124,7 +126,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
 
         public RoomDoor ConvertPotentialDoor()
         {
-            if (!AllowGeneratingPotentialDoors)
+            if (!AllowGeneratingPotentialDoors || DoorsCanCreate <= 0)
             {
                 PotentialDoors.Clear();
                 return null;
@@ -142,6 +144,7 @@ namespace RougelikeDungeon.World.Generation.Rooms
 
             //Get Real Position
             Door.Position += TileOrigin;
+            DoorsCanCreate--;
 
             //Give Back
             return Door;

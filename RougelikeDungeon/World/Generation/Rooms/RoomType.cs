@@ -21,6 +21,8 @@ namespace RougelikeDungeon.World.Generation.Rooms
         BossHallway, //like in gungeon
 
         ComplexRoom,
-        
+
+        TreasureRoom,
+
     }
 }

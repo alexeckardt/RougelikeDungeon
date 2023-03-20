@@ -59,11 +59,13 @@ namespace RougelikeDungeon.World.Generation.Rooms
             return Rect.Contains(tilePosition);
         }
 
-        public bool Intersects(RoomShapePart other)
+        public bool Intersects(RoomShapePart other) => this.Intersects(other, 0);
+
+        public bool Intersects(RoomShapePart other, int buffer)
         {
-            if (other.Left < Right && Left < other.Right && other.Top < Bottom)
+            if (other.Left < Right+buffer && Left-buffer < other.Right && other.Top < Bottom + buffer)
             {
-                return Top < other.Bottom;
+                return Top-buffer < other.Bottom;
             }
 
             return false;
